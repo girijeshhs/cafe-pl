@@ -47,7 +47,7 @@ INSERT INTO Customer (name, phone) VALUES
 INSERT INTO Product (product_name, price) VALUES 
 ('Coffee', 50.00),
 ('Tea', 30.00),
-('Sandwich', 80.00),
+('Sandwich', 80.00);
 ('Burger', 120.00),
 ('Pizza', 200.00);
 
