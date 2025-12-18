@@ -364,3 +364,111 @@ Reporting can be made more useful while staying text-based. Examples include ric
 - Troubleshooting checklist for common issues.  
 - Maintenance schedule for database backups and updates.
 
+### Appendix D: UML Diagrams
+
+Use Case Diagram (PlantUML):
+```
+@startuml
+actor Staff
+rectangle "Cafe Management System (CLI)" {
+	usecase "Manage Customers" as UC1
+	usecase "Manage Products/Menu Items" as UC2
+	usecase "Place Order" as UC3
+	usecase "Generate Bill" as UC4
+	usecase "Update Inventory" as UC5
+	usecase "View Basic Reports" as UC6
+}
+
+Staff --> UC1
+Staff --> UC2
+Staff --> UC3
+Staff --> UC4
+Staff --> UC5
+Staff --> UC6
+UC3 --> UC4 : includes
+@enduml
+```
+Purpose: Single actor (Staff) interacts with core CLI features—customer/product CRUD, orders, billing, inventory updates, and basic reports—matching the local Java + MySQL scope.
+
+Class Diagram (PlantUML):
+```
+@startuml
+class App {
+	+main(args)
+}
+
+class CustomerManager {
+	+addCustomer(...)
+	+updateCustomer(...)
+	+listCustomers()
+	+deleteCustomer(...)
+}
+
+class ProductManager {
+	+addProduct(...)
+	+updateProduct(...)
+	+listProducts()
+	+deleteProduct(...)
+	+adjustStock(...)
+}
+
+class OrderManager {
+	+createOrder(customer, items)
+	+addItem(orderId, productId, qty)
+	+finalizeOrder(orderId)
+	+generateBill(orderId)
+}
+
+class DatabaseConnection {
+	+getConnection(): Connection
+}
+
+class Order {
+	-id
+	-customerId
+	-total
+}
+
+class OrderItem {
+	-orderId
+	-productId
+	-quantity
+	-price
+}
+
+App --> CustomerManager
+App --> ProductManager
+App --> OrderManager
+CustomerManager --> DatabaseConnection
+ProductManager --> DatabaseConnection
+OrderManager --> DatabaseConnection
+OrderManager --> Order
+Order --> OrderItem
+@enduml
+```
+Purpose: Minimal CLI architecture—App drives managers; managers validate and call JDBC via DatabaseConnection; Order and OrderItem model multi-line orders; no extra layers or frameworks.
+
+Sequence Diagram (Place Order, PlantUML):
+```
+@startuml
+actor Staff
+participant "CLI (App)" as CLI
+participant "OrderManager" as OM
+participant "DatabaseConnection" as DB
+database "MySQL" as SQL
+
+Staff -> CLI : select "Place Order"
+CLI -> OM : createOrder(customer, items)
+OM -> DB : getConnection()
+DB -> SQL : begin transaction
+OM -> SQL : INSERT Order (header)
+OM -> SQL : INSERT OrderItems (each line)
+OM -> SQL : UPDATE Products SET stock = stock - qty
+SQL --> DB : commit
+DB --> OM : success
+OM --> CLI : orderId, total, bill text
+CLI --> Staff : display bill/confirmation
+@enduml
+```
+Purpose: Shows transactional flow for placing an order via CLI; all inserts/updates run in one JDBC transaction, stock is decremented, and bill text is returned for display.
+
