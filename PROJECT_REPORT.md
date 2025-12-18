@@ -257,15 +257,27 @@ Simple sequence notes captured the typical flow: a staff member selects “creat
 
 ### 4.1 Architecture
 
-The system follows a simple three-layer setup: CLI menus for interaction, manager classes for business rules, and DAO classes for MySQL access. Clear boundaries make it easy to swap the CLI for a GUI or API later without rewriting data code. Configuration is externalised in a properties file to change database hosts or credentials without recompiling.
+The system adopts a simple three-layer structure that fits a console-only environment. At the top, CLI menus capture user choices and present concise prompts; in the middle, manager classes enforce business rules such as ensuring prices are positive and orders contain at least one item; at the base, DAO classes handle direct interactions with MySQL. This separation keeps the code readable and ensures that changes to database queries do not affect user-facing menus. It also means that if a different interface is ever added, the underlying logic remains intact.
+
+Each layer communicates through clearly defined method calls rather than shared global state. This choice reduces coupling and makes it straightforward to trace a request from the menu selection down to the SQL execution. Because the system runs on shared café laptops, the architecture avoids background daemons or auxiliary services that would complicate deployment. All configuration—such as database host, port, and credentials—is externalised in a single properties file, allowing the application to be re-pointed to another MySQL instance without recompilation.
+
+The architecture explicitly omits additional tiers like message queues, caching servers, or web front-ends because the target usage does not warrant them. By constraining the design to three layers, the project maintains a balance between structure and simplicity, enabling students and café staff to understand and troubleshoot the flow without specialised tooling.
 
 ### 4.2 Data and Interaction Design
 
-The schema links customers, products, orders, and order lines with foreign keys. Basic indexes on customer, product, and order date speed up lookups. Typical flows move from menu → manager → DAO → SQL, then return a clear success or error message to the user. Soft validation rules (e.g., phone length, price > 0) run before hitting the database to keep constraints simple.
+The relational schema connects four core entities: customers, products, orders, and order line items. Foreign keys enforce that every order line references a valid product and that every order can be tied to an optional customer. Indexes on customer identifiers, product identifiers, and order dates are chosen to accelerate common lookups, such as listing recent orders or checking whether a customer already exists before inserting a duplicate.
+
+User interactions follow a predictable path: a menu choice triggers a manager method, the manager validates the input, and the DAO executes the SQL. On success, a concise confirmation is shown; on failure, the user sees a brief message while the log records technical details. Validation rules—such as ensuring phone numbers meet a basic length threshold and prices are greater than zero—run before database calls to prevent unnecessary transactions and to keep constraints easy to understand.
+
+Because the system is CLI-only, navigation remains linear. Menus are arranged so that staff can complete tasks in minimal steps, and lists are kept short with simple pagination when product counts grow. This interaction design reflects the constraint of operating without a GUI while still providing clear feedback loops for each action.
 
 ### 4.3 Security and Growth Hooks
 
-Credentials live outside source control, and prepared statements reduce SQL injection risk. Backups and simple roles protect data. Error logs avoid printing credentials or raw SQL to the console. Future growth can add pooling or caching if traffic rises, but the current design keeps things lean for a single café and favours debuggability over premature optimisation.
+Security measures focus on what is practical for a single-location CLI deployment. Database credentials are stored outside source control so they can be rotated without code changes. All SQL uses prepared statements to guard against injection in user inputs such as names or phone numbers. Error logs intentionally avoid printing credentials or raw SQL, reducing the risk of accidental exposure on shared machines.
+
+Data protection relies on straightforward practices: periodic MySQL dumps for backups, simple database roles with only the permissions needed by the application, and clear operator instructions for restore procedures. Because there is no web surface, the threat model is limited to local misuse or misconfiguration, so controls emphasise principle of least privilege and recoverability rather than perimeter defences.
+
+Potential growth areas are documented but not enabled by default. If order volume rises, connection pooling could be added to reuse database connections, and basic caching could reduce repeated product lookups. These remain optional to keep the current deployment lean and debuggable, aligning with the constraint of a small café without dedicated infrastructure.
 
 ---
 
