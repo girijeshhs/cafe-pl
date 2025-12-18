@@ -105,71 +105,42 @@ The project follows a structured software engineering methodology encompassing r
 
 </div>
 
-| CHAPTER NO. | TITLE | PAGE NO. |
-| --- | --- | --- |
-| - | Acknowledgement | ii |
-| - | Abstract | iii |
-| - | List of Figures | xv |
-| - | List of Tables | xvii |
-| - | List of Symbols and Abbreviations | xix |
-| 1 | Introduction | 1 |
-| 2 | Literature Review | 8 |
-| 3 | System Analysis | 18 |
-| 4 | System Design | 30 |
-| 5 | Implementation | 46 |
-| 6 | Testing and Validation | 60 |
-| 7 | Results, Evaluation, and Discussion | 72 |
-| 8 | Project Management and Sustainability | 84 |
-| 9 | Conclusion and Future Work | 96 |
-| - | References | 102 |
-| - | Appendices | 108 |
+- Acknowledgement
+- Abstract
+- Chapter 1: Introduction
+- Chapter 2: Literature Review
+- Chapter 3: System Analysis
+- Chapter 4: System Design
+- Chapter 5: Implementation
+- Chapter 6: Testing and Validation
+- Chapter 7: Results, Evaluation, and Discussion
+- Chapter 8: Project Management and Sustainability
+- Chapter 9: Conclusion and Future Work
+- References
+- Appendices
 
 ---
 
 <div align="center">
 
-**LIST OF FIGURES**
+**LIST OF FIGURES** (to be inserted when diagrams are added)
 
 </div>
 
-| FIG. NO. | FIGURE TITLE | PAGE NO. |
-| --- | --- | --- |
-| 3.1 | Stakeholder Mapping Diagram | 22 |
-| 3.2 | Level-0 Context Diagram | 26 |
-| 3.3 | Use Case Diagram | 28 |
-| 4.1 | Layered Architecture Overview | 34 |
-| 4.2 | Detailed Class Diagram | 38 |
-| 4.3 | Sequence Diagram for Order Processing | 41 |
-| 4.4 | Entity Relationship Diagram | 44 |
-| 5.1 | Module Interaction Workflow | 53 |
-| 7.1 | Performance Benchmark Chart | 78 |
-| 7.2 | User Satisfaction Survey Results | 80 |
-| 8.1 | Gantt Chart for Project Schedule | 88 |
+- Figure 1: Layered architecture overview (placeholder)
+- Figure 2: Class diagram (placeholder)
+- Figure 3: Entity-relationship sketch (placeholder)
 
 ---
 
 <div align="center">
 
-**LIST OF TABLES**
+**LIST OF TABLES** (to be inserted when tables are added)
 
 </div>
 
-| TABLE NO. | TABLE TITLE | PAGE NO. |
-| --- | --- | --- |
-| 3.1 | Functional Requirements Traceability | 20 |
-| 3.2 | Non-Functional Requirements Traceability | 21 |
-| 3.3 | Risk Assessment Matrix | 24 |
-| 3.4 | SWOT Analysis for Proposed System | 29 |
-| 4.1 | Database Schema Description | 37 |
-| 5.1 | Technology Stack Justification | 48 |
-| 5.2 | Core Module Responsibility Matrix | 54 |
-| 6.1 | Test Plan Summary | 64 |
-| 6.2 | Sample Functional Test Cases | 66 |
-| 6.3 | Performance Test Metrics | 69 |
-| 7.1 | Comparative Analysis with Existing Solutions | 76 |
-| 7.2 | ROI Projection over Three Years | 82 |
-| 8.1 | Cost Estimation and Budget Allocation | 86 |
-| 8.2 | Stakeholder Communication Plan | 92 |
+- Table 1: Requirements summary (placeholder)
+- Table 2: Test plan summary (placeholder)
 
 ---
 
@@ -179,24 +150,22 @@ The project follows a structured software engineering methodology encompassing r
 
 </div>
 
-| ABBREVIATION | EXPANSION |
-| --- | --- |
-| API | Application Programming Interface |
-| CLI | Command Line Interface |
-| CRUD | Create, Read, Update, Delete |
-| DBMS | Database Management System |
-| ER | Entity Relationship |
-| GUI | Graphical User Interface |
-| IDE | Integrated Development Environment |
-| JDBC | Java Database Connectivity |
-| JSON | JavaScript Object Notation |
-| KPI | Key Performance Indicator |
-| MVC | Model View Controller |
-| OOP | Object-Oriented Programming |
-| ROI | Return on Investment |
-| SDLC | Software Development Life Cycle |
-| SQL | Structured Query Language |
-| UML | Unified Modeling Language |
+- API — Application Programming Interface  
+- CLI — Command Line Interface  
+- CRUD — Create, Read, Update, Delete  
+- DBMS — Database Management System  
+- ER — Entity Relationship  
+- GUI — Graphical User Interface  
+- IDE — Integrated Development Environment  
+- JDBC — Java Database Connectivity  
+- JSON — JavaScript Object Notation  
+- KPI — Key Performance Indicator  
+- MVC — Model View Controller  
+- OOP — Object-Oriented Programming  
+- ROI — Return on Investment  
+- SDLC — Software Development Life Cycle  
+- SQL — Structured Query Language  
+- UML — Unified Modeling Language  
 
 ---
 
