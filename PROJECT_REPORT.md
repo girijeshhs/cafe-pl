@@ -229,15 +229,27 @@ Finally, the literature notes that minimal logging and straightforward menu flow
 
 ### 3.1 Requirements Summary
 
-We collected needs from a typical café flow: capture customers, list products with prices, place orders with line items, print invoices, and see simple summaries such as top-selling items and totals per day. Basic expectations include fast lookups, straightforward menus, and input validation so staff avoid rework. Each requirement was tagged with a short test note to keep development and validation aligned.
+Requirements were gathered directly from the everyday tasks of a single-location café. The essential capabilities include capturing basic customer details, maintaining a product catalogue with names and prices, placing orders that contain multiple line items, and printing invoices that reflect those items accurately. Operational staff also requested simple summaries—such as daily totals and frequently ordered products—to help with end-of-day reconciliation. These needs define the minimum viable scope and avoid optional conveniences that would increase complexity without clear benefit to the target environment.
+
+Performance and usability expectations are modest but explicit. Lookups for customers and products should be responsive even on mid-range laptops, and menu navigation should be linear and predictable so new staff can learn the system quickly. Validation rules—such as enforcing positive prices and reasonable phone number formats—are treated as requirements because they prevent rework and reduce downstream corrections in the database.
+
+Each requirement was paired with a brief test note, for example “verify order total matches sum of line items” or “reject negative prices.” This pairing kept development aligned with validation and ensured that the implemented features could be demonstrated consistently. By keeping the requirement set compact and testable, the project preserved focus on core café operations instead of drifting toward broader retail features.
 
 ### 3.2 Feasibility and Risks
 
-The stack (Java 17, MySQL) runs on common laptops, so technical feasibility is straightforward. Key risks are database downtime, messy CSV imports, and limited training time. Mitigations include backups, small seed scripts, short how-to notes, and a “dry run” mode for testing imports without committing changes. Operationally, the plan assumes at least one staff member can restart the service and restore from a dump if needed.
+Technical feasibility rests on familiar, widely available tools: Java 17 for the CLI and MySQL for storage. Both run reliably on common lab or café laptops without specialised hardware, and neither requires cloud services. This reduces deployment friction and keeps the environment under the café’s direct control. The application’s modest CPU and memory needs align with this constraint, ensuring that responsiveness remains acceptable during typical usage.
+
+Several risks were identified early. Database downtime—whether from misconfiguration or power loss—could halt order entry; to mitigate this, regular SQL dumps are recommended and the application surfaces clear error messages when connections fail. Data quality risks emerge when importing legacy spreadsheets; a “dry run” mode for imports lets staff preview validation errors before committing changes. Training time is another risk because staff rotate; concise how-to notes and simple menu wording lower the onboarding burden.
+
+Operational assumptions include the availability of at least one staff member who can restart the application and restore from a backup if necessary. There is no assumption of continuous internet access, so all functionality runs locally against MySQL. By constraining the environment to what is realistically available on-site, the project reduces external dependencies and focuses on robustness within those bounds.
 
 ### 3.3 Models Used
 
-Lightweight models—use case list, context view, and ER diagram—kept the team aligned on entities (customers, products, orders) and their links before coding. Sequence notes documented typical flows (new customer → create order → add items → bill). These models are intentionally brief so they can be refreshed when future features like payments or loyalty points arrive.
+The analysis phase used a handful of lightweight models to align understanding before coding. A use case list enumerated core actions such as “add product,” “create order,” and “print invoice,” ensuring that each functional requirement had a clear operational expression. A context view showed the CMS in relation to the only external element—the MySQL database—reinforcing that no other services are in scope.
+
+An entity-relationship (ER) diagram mapped customers, products, orders, and order line items, clarifying primary keys, foreign keys, and cardinalities. This helped confirm that one order could contain many products and that products could appear across many orders without duplicating product records. Because the system is limited to a single café, the model deliberately excludes branches, delivery partners, or payment processors.
+
+Simple sequence notes captured the typical flow: a staff member selects “create order,” optionally adds or selects a customer, adds one or more products as line items, and then confirms to generate an invoice. Keeping these models brief makes them easy to update when modest enhancements are added, such as loyalty tracking or basic discounts, without needing to rework the entire analysis artefact set.
 
 ---
 
