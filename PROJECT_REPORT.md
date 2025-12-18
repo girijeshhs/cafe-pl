@@ -93,9 +93,9 @@ I express my sincere gratitude to **Dr. [HOD NAME]**, Head of the Department of 
 
 </div>
 
-The **Cafe Management System** is a comprehensive console-driven software suite engineered to digitalise and optimise the end-to-end operations of contemporary cafés. The application integrates **Java** for business logic, **MySQL** for persistent storage, and **JDBC** as the connectivity layer, ensuring secure and efficient data transactions. The system enables structured management of customers, products, orders, billing, analytics, and administrative tasks—thereby replacing fragmented manual processes with a cohesive digital workflow.
+The **Cafe Management System** is a console-driven Java and MySQL application that replaces handwritten tickets and spreadsheets with a single, menu-driven workflow. It covers customers, products, orders, billing, and basic reports so a small café can run day-to-day tasks consistently without extra licences or complex hardware.
 
-The project follows a structured software engineering methodology encompassing requirement elicitation, layered architectural design, modular implementation, and exhaustive validation. Distinct design artefacts such as use case diagrams, class diagrams, data flow diagrams, and entity-relationship models provide a blueprint for maintainability and scalability. Furthermore, the solution incorporates defensive programming techniques, transaction management, exception handling, input validation, and rudimentary analytics dashboards. Evaluation across functional, performance, security, and usability dimensions demonstrates that the system reduces order processing time by 37%, increases inventory accuracy by 28%, and improves customer query resolution by 42% compared with manual baselines. This report documents the entire lifecycle—from ideation and literature synthesis to deployment strategy and future roadmap—to serve as a replicable reference for similar transactional systems.
+The project was built with straightforward software engineering steps: gathering needs from a typical café workflow, sketching a layered design, implementing the core modules, and validating behaviour with simple tests. Design sketches (use case and ER diagrams) act as guidance rather than heavy documentation. Early trial runs on sample data showed faster order entry and clearer stock tracking compared to the manual baseline. This report documents what was built, how it was built, and where it can grow next.
 
 ---
 
@@ -171,203 +171,97 @@ The project follows a structured software engineering methodology encompassing r
 
 ## CHAPTER 1: INTRODUCTION
 
-### 1.1 General
+### 1.1 Context and Goals
 
-The rapid expansion of the café and quick-service restaurant industry has amplified the need for reliable, scalable, and data-driven management platforms. Traditional operations frequently rely on handwritten order tickets, manual spreadsheets, and siloed desktop software. These fragmented practices introduce latency, operational ambiguity, and data inconsistencies—particularly during high-demand intervals such as weekend rush hours. The **Cafe Management System (CMS)** is envisioned as a digitally integrated platform that centralises customer, order, and inventory operations, thereby enabling real-time insights and faster decision making.
+Local cafés often juggle handwritten tickets and spreadsheets, which slows service and hides stock issues. The **Cafe Management System (CMS)** aims to give a single, easy workflow for customers, products, orders, and billing so daily operations stay consistent.
 
-### 1.2 Problem Definition
+### 1.2 Scope and Constraints
 
-Operational inconsistencies in manual café workflows manifest as delayed order fulfilment, inaccurate billing, wastage from poor inventory visibility, and inadequate customer relationship management. The absence of centralised data further impedes managerial forecasting and compliance reporting. The proposed CMS seeks to eliminate these pain points by delivering a robust software solution with transactional integrity, modular design, and accessible interfaces for staff of varying technical expertise.
+This version focuses on a menu-driven CLI with MySQL storage. It covers customer records, product catalogues, order capture, invoices, and simple summaries. Payment gateways, loyalty programmes, and multi-branch sync are left for later.
 
-### 1.3 Objectives
+### 1.3 Approach and Report Map
 
-The project pursues the following primary objectives:
-
-- Develop a modular, menu-driven CLI that encapsulates customer, product, and order lifecycles.
-- Establish a secure persistence layer using MySQL with transactional safeguards and schema validation.
-- Integrate analytical dashboards that summarise sales trends, peak hours, and customer acquisition metrics.
-- Provide extensibility hooks for future integration with GUI front-ends, payment gateways, and third-party delivery services.
-- Adhere to industry best practices in software engineering, ensuring maintainability, portability, and reusability.
-
-### 1.4 Scope
-
-The scope of the current release encompasses user authentication, customer profiling, product catalogue management, order orchestration, invoice generation, and administrative reporting. Peripheral modules such as supplier management, loyalty programmes, and multi-outlet synchronisation are documented as future enhancements. The system is designed for cafés with a daily order volume between 100 and 1,000, providing a balance between lightweight deployment and enterprise-grade resilience.
-
-### 1.5 Significance of the Study
-
-Digitally transforming café operations introduces measurable benefits: minimised service delays, accurate stock replenishment, visibility into revenue analytics, and improved compliance with taxation norms. From an academic perspective, the project demonstrates the practical application of core computer science concepts such as database design, object-oriented analysis, and layered architecture within a real-world use case.
-
-### 1.6 Methodology Overview
-
-The development journey follows the **Spiral Model** of the SDLC, iterating through requirement gathering, risk analysis, engineering, and evaluation. Each iteration culminates in a demonstrable increment, ensuring stakeholder feedback is continuously assimilated. Tooling includes Git for version control, Lucidchart for modelling, and Apache Maven for dependency management.
-
-### 1.7 Report Organisation
-
-The remainder of the report is structured as follows: Chapter 2 synthesises relevant literature; Chapter 3 presents the system analysis; Chapter 4 delineates the design artefacts; Chapter 5 elaborates implementation details; Chapter 6 outlines the testing strategy; Chapter 7 evaluates results; Chapter 8 articulates project management considerations; and Chapter 9 concludes with future prospects. Appendices contain supplementary artefacts such as deployment scripts and user manuals.
+We gathered the core needs, drafted a simple layered design, built the CLI and database pieces, and verified behaviour with basic tests. The remaining chapters follow that path: related work, analysis, design, implementation, testing, results, project management, and future work.
 
 ---
 
 ## CHAPTER 2: LITERATURE REVIEW
 
-### 2.1 Overview of Existing Solutions
+### 2.1 Point-of-Sale Landscape
 
-The café automation landscape hosts a range of commercial products, including Toast POS, Square for Restaurants, and Lightspeed. These platforms provide omnichannel capabilities but incur subscription costs and often present closed ecosystems that limit customisation. Academic implementations frequently focus on GUI-driven applications, leaving a gap for portable CLI-based solutions that can be executed in resource-constrained environments or integrated within DevOps pipelines.
+Popular options like Toast POS and Square for Restaurants provide full suites but come with subscriptions and less room to customise. Lightweight academic builds often favour GUIs. A CLI-based tool remains handy for low-cost setups and scripted operations.
 
-### 2.2 Theoretical Underpinnings
+### 2.2 Technology Foundations
 
-The project is grounded in the principles of **Object-Oriented Design**, **Relational Database Theory**, and **Human-Computer Interaction**. OOP facilitates modular encapsulation, inheritance for manager classes, and polymorphic behaviours for transaction handling. Relational theory informs normalised schema design and referential integrity, while HCI guidelines ensure the CLI remains intuitive via clear prompts, validation messages, and contextual feedback.
+The project leans on core ideas: object-oriented design for modular classes, relational design for consistent data, and simple HCI cues (clear prompts and validation) for a usable CLI. Java with JDBC fits well because it is stable, widely taught, and pairs cleanly with MySQL.
 
-### 2.3 Java Ecosystem Review
+### 2.3 Lessons from Prior Work
 
-Java’s platform independence, extensive standard library, and mature JVM tooling make it a prime candidate for enterprise applications. The language offers built-in support for concurrency, security, and memory management. Relevant libraries include `java.sql` for database access, `java.util.logging` for diagnostics, and `java.time` for timestamp management. Emerging frameworks such as Micronaut and Quarkus are analysed for potential migration pathways to microservices.
-
-### 2.4 Database Technologies
-
-MySQL remains a de facto standard for transactional workloads due to its ACID compliance, replication features, and compatibility with a broad ecosystem of tools. Comparative evaluation with PostgreSQL and SQLite indicates MySQL’s superior performance under concurrent write-heavy operations typical in café environments. MySQL Workbench and phpMyAdmin serve as administrative companions for schema visualisation and backup strategies.
-
-### 2.5 Middleware and Connectivity
-
-**JDBC** abstractions allow Java applications to interact with relational databases through driver-based implementations. The review explores `PreparedStatement` for parameterised queries, `ResultSet` handling patterns, and connection pooling via HikariCP. Transaction management using commit/rollback semantics ensures atomicity when recording multi-line orders.
-
-### 2.6 Security Considerations
-
-Data privacy and transaction integrity are critical in POS systems. Key security literature emphasises encryption-at-rest, secure credential storage, and the principle of least privilege for database accounts. OWASP guidelines for input validation, logging, and auditing have been referenced to architect defensive layers.
-
-### 2.7 Related Academic Works
-
-Several undergraduate and postgraduate theses were examined to benchmark methodology and documentation style. Notably, studies on restaurant automation, inventory management, and customer analytics provided insights into success factors, pitfalls, and evaluation metrics. A comparative gap analysis highlights the novelty of blending console accessibility with enterprise-grade design.
+Past restaurant projects show success when they keep data models small, apply input validation early, and log actions for audit. Those lessons guided our choices on schema normalisation, prepared statements, and straightforward menu flows.
 
 ---
 
 ## CHAPTER 3: SYSTEM ANALYSIS
 
-### 3.1 Requirement Engineering Process
+### 3.1 Requirements Summary
 
-Requirement elicitation was conducted through interviews with café managers, observation of order workflows, and analysis of legacy spreadsheets. Documented requirements were prioritised using MoSCoW classification (Must, Should, Could, Won’t). Stakeholder mapping identified primary users (cashiers, supervisors), secondary users (inventory staff), and tertiary stakeholders (accountants, customers).
+We collected needs from a typical café flow: capture customers, list products with prices, place orders with line items, print invoices, and see simple summaries. Basic expectations include fast lookups and input validation so staff avoid rework.
 
-### 3.2 Functional Requirements Traceability
+### 3.2 Feasibility and Risks
 
-Table 3.1 establishes bidirectional traceability linking high-level goals to detailed use cases and system modules. Traceability ensures each requirement is addressed in design and validated through testing, reducing the risk of scope creep or undocumented features.
+The stack (Java 17, MySQL) runs on common laptops, so technical feasibility is straightforward. Key risks are database downtime, messy CSV imports, and limited training time. Mitigations include backups, small seed scripts, and short how-to notes.
 
-### 3.3 Non-Functional Requirements
+### 3.3 Models Used
 
-Performance, scalability, reliability, usability, and security are codified with measurable indicators—for example, order creation must complete within 1.5 seconds under nominal load, and critical failures must trigger diagnostic logs within five seconds. Compliance with ISO/IEC 25010 product quality standards is targeted.
-
-### 3.4 Feasibility Study
-
-The feasibility analysis spans technical, operational, and economic dimensions. Technical feasibility confirms resource availability (JDK, MySQL server, development workstations). Operational feasibility evaluates user readiness and training requirements. Economic feasibility presents cost-benefit estimations, demonstrating a payback period of nine months driven by labour savings and inventory optimisation.
-
-### 3.5 Risk Assessment
-
-Risks such as database downtime, inaccurate inventory imports, and resistance to technology adoption are catalogued with probability-impact matrices. Mitigation strategies include automated backups, validation scripts, phased rollouts, and staff training workshops.
-
-### 3.6 SWOT Analysis
-
-A SWOT framework summarises strengths (modular architecture), weaknesses (absence of graphical front-end), opportunities (integration with delivery aggregators), and threats (vendor lock-in from competing platforms). This informs roadmap prioritisation.
-
-### 3.7 System Models
-
-Multiple analytical models were crafted: a context diagram showcasing external entities; data flow diagrams outlining transformations; and use case diagrams mapping interactions. These artefacts align stakeholders around the intended behaviour of the system before implementation begins.
+Lightweight models—use case list, context view, and ER diagram—kept the team aligned on entities (customers, products, orders) and their links before coding. They remain simple enough to update as features grow.
 
 ---
 
 ## CHAPTER 4: SYSTEM DESIGN
 
-### 4.1 Architectural Overview
+### 4.1 Architecture
 
-The system adopts a **three-layered architecture** comprising presentation, business logic, and data access layers. The presentation layer handles CLI interactions, business logic encapsulates domain rules, and the data access layer manages persistence. Each layer communicates via well-defined interfaces, enabling substitution or scaling of individual components without widespread refactoring.
+The system follows a simple three-layer setup: CLI menus for interaction, manager classes for business rules, and DAO classes for MySQL access. Clear boundaries make it easy to swap the CLI for a GUI later without rewriting data code.
 
-### 4.2 Design Principles and Patterns
+### 4.2 Data and Interaction Design
 
-Key design patterns include Singleton (for database connection management), Data Access Object (DAO) for encapsulating SQL interactions, Factory Method for manager instantiation, and Template Method for shared validation routines. SOLID principles guide class responsibilities, ensuring open/closed compliance and dependency inversion where possible.
+The schema links customers, products, orders, and order lines with foreign keys. Basic indexes on customer, product, and order date speed up lookups. Typical flows move from menu → manager → DAO → SQL, then return a clear success or error message to the user.
 
-### 4.3 Database Design
+### 4.3 Security and Growth Hooks
 
-The database schema enforces referential integrity through foreign keys linking orders, customers, and products. Composite primary keys in `Order_Details` prevent duplication of line items. Indexing strategies include B-tree indexes on `customer_id`, `product_id`, and order date columns, optimising query performance for frequent lookups.
-
-### 4.4 Data Flow and Interaction
-
-Sequence diagrams narrate the interaction lifecycle from customer selection to billing. A request originates at the CLI, traverses through the relevant manager, invokes DAO methods, and ultimately executes SQL operations. Feedback propagates back to the user with success or error messages.
-
-### 4.5 User Interface Logic
-
-Despite being console-based, the UI design focuses on clarity, employing colour cues (where supported), structured menus, and context-sensitive help prompts. Input validation loops ensure that invalid entries do not terminate the session, and confirmations accompany destructive actions such as deletions.
-
-### 4.6 Security Design
-
-Security considerations encompass encrypted configuration files for database credentials, hashed audit logs, and restricted database roles. Backup strategies include nightly dumps and point-in-time recovery using binary logs. The design also introduces a role abstraction layer for future RBAC integration.
-
-### 4.7 Scalability Considerations
-
-The modular design facilitates scaling through horizontal partitioning (sharding by outlet) or vertical scaling (deploying to higher-capacity servers). Connection pooling and caching strategies are documented to support increased load with minimal refactoring.
+Credentials live outside source control, and prepared statements reduce SQL injection risk. Backups and simple roles protect data. Future growth can add pooling or caching if traffic rises, but the current design keeps things lean for a single café.
 
 ---
 
 ## CHAPTER 5: IMPLEMENTATION
 
-### 5.1 Technology Stack
+### 5.1 Stack and Modules
 
-Implementation leverages Java 17, Maven for build automation, MySQL 8.0, and MySQL Connector/J. Auxiliary libraries include JUnit for unit testing and Log4j for structured logging. The choice of technologies balances modern capabilities with long-term support.
+Code uses Java 17, Maven, MySQL 8.0, and Connector/J. Core classes: `DatabaseConnection` (connect and bootstrap), `CustomerManager`, `ProductManager`, and `OrderManager`. A simple logger records key events and errors.
 
-### 5.2 Module Development Strategy
+### 5.2 Key Behaviours
 
-Development followed a feature-branch workflow with code reviews using GitHub pull requests. Continuous integration pipelines executed automated builds and tests upon commits. Static code analysis via SpotBugs ensured adherence to coding standards.
+The CLI menus route actions to managers, which validate inputs and call DAOs. Order creation wraps item inserts in a transaction so invoices are consistent. Phone and price checks prevent common bad data.
 
-### 5.3 Core Modules
+### 5.3 Deployment and Operations
 
-- **DatabaseConnection.java**: Handles driver loading, connection pooling hooks, and schema bootstrapping. It encapsulates retry logic with exponential back-off.
-- **CustomerManager.java**: Provides CRUD operations with validation rules for phone formats and duplicate detection.
-- **ProductManager.java**: Maintains the product catalogue with price normalisation and seasonal tagging.
-- **OrderManager.java**: Implements transaction-managed order creation, invoice generation, and integrated analytics counters.
-- **ReportGenerator (future module)**: Documented for optional export of CSV and PDF summaries.
-
-### 5.4 Algorithmic Highlights
-
-Key algorithms include the computation of order totals with taxation slabs, inventory decrement logic, and recommendation of upsell items based on historical data. Caching recent orders in memory improves responsiveness for frequent queries.
-
-### 5.5 Data Migration and Initialisation
-
-Initial data population scripts were created in SQL to seed the database with sample products, categories, and loyalty tiers. A migration framework using Flyway has been outlined to manage schema evolution.
-
-### 5.6 Exception Handling
-
-Centralised exception handlers log errors with contextual metadata. User-facing messages abstract technical details to preserve usability while enabling administrators to diagnose issues through log files. Critical faults trigger fallback mechanisms to maintain data integrity.
-
-### 5.7 Deployment Strategy
-
-Deployment can occur on-premises or within cloud environments. Dockerfiles (documented in Appendix B) facilitate containerised deployment. CI/CD scripts integrate with GitHub Actions to automate build, test, and deployment stages.
+The app runs from the command line with a `database_setup.sql` seed. Optional Dockerfiles support container runs. Backups are simple SQL dumps; no external services are required.
 
 ---
 
 ## CHAPTER 6: TESTING AND VALIDATION
 
-### 6.1 Testing Objectives
+### 6.1 Strategy
 
-Testing aims to verify functional correctness, reliability under load, and compliance with requirements. Metrics captured include defect density, test coverage, and mean time to failure.
+Testing covered the basics: CRUD paths for customers, products, and orders; validation for prices and phone numbers; and transaction safety during order creation. Data resets between runs kept tests repeatable.
 
-### 6.2 Test Environment
+### 6.2 Coverage and Tools
 
-Testing was conducted on macOS and Windows environments with identical Java and MySQL versions to ensure cross-platform stability. Data fixtures were reset between suites using transactional rollbacks.
+JUnit handled unit checks, and manual runs verified end-to-end menu flows on macOS and Windows with the same Java/MySQL setup. Prepared statements were probed with bad inputs to confirm rejection.
 
-### 6.3 Functional Testing
+### 6.3 Outcomes
 
-Test cases assessed each CRUD operation, ensuring validation rules and database constraints operate as intended. Automated JUnit suites cover success paths, edge cases, and negative scenarios.
-
-### 6.4 Integration Testing
-
-Integration tests simulate real-world workflows such as customer onboarding followed by order placement and billing. Mock objects were employed for external dependencies, while in-memory databases supported reproducible test runs.
-
-### 6.5 Performance Testing
-
-Load tests executed via Apache JMeter evaluated response times with concurrent virtual users. Stress tests identified the system’s breaking point, guiding recommendations for hardware scaling.
-
-### 6.6 Security and Usability Testing
-
-Security evaluations included SQL injection attempts, credential brute-force simulations, and log tampering assessments. Usability testing leveraged heuristic evaluations and think-aloud sessions with staff to refine menu ordering and feedback prompts.
-
-### 6.7 Defect Tracking
-
-Defects were logged in Jira with severity classifications and resolution timestamps. Root cause analysis was performed for high-severity issues, leading to code refactoring or documentation updates.
+Core flows worked as expected after fixing input validation edge cases and a transaction rollback bug. Future work should add scripted regression suites and simple load checks once a GUI or API is added.
 
 ---
 
@@ -389,29 +283,17 @@ The system promotes sustainability by enabling data-driven supply decisions that
 
 ## CHAPTER 8: PROJECT MANAGEMENT AND SUSTAINABILITY
 
-### 8.1 Work Breakdown Structure
+### 8.1 Plan and Schedule
 
-The project was segmented into requirement analysis, design, development, testing, deployment preparation, and documentation. Each work package contained deliverables, acceptance criteria, and resource allocations. A Gantt chart (Figure 8.1) outlines the timeline across a 16-week semester.
+Work was split into requirements, design, build, test, and handoff. A simple 16-week plan guided checkpoints without heavy tooling—weekly check-ins with the mentor kept scope under control.
 
-### 8.2 Resource Allocation
+### 8.2 Resources and Budget
 
-Human resources included the student developer, faculty mentor, and two peer reviewers. Hardware resources comprised development laptops and a staging server. Software resources covered licensed diagramming tools and open-source testing frameworks.
+People: the student developer plus mentor feedback. Tools: laptops, MySQL server, Java 17, and free/community IDEs and diagramming tools. Costs were limited to optional printing and any cloud trials, kept low by using free tiers.
 
-### 8.3 Budgeting and Cost Control
+### 8.3 Quality and Compliance
 
-Table 8.1 itemises expenses such as hosting, peripherals, and optional licences. Cost control mechanisms included leveraging academic licences, opting for community editions of IDEs, and using cloud free tiers for testing environments.
-
-### 8.4 Risk Monitoring and Communication Plan
-
-Regular review meetings with the supervisor ensured risks were tracked and mitigated. Table 8.2 summarises the communication cadence, stakeholders involved, and channels used (email, virtual meetings, progress logs).
-
-### 8.5 Quality Assurance
-
-Quality gates involved peer code reviews, adherence to coding standards, and documentation checklists. Verification and validation activities were integrated within the sprint structure, ensuring incremental quality assurance rather than end-loaded testing.
-
-### 8.6 Ethical and Legal Compliance
-
-The project complies with data privacy regulations by anonymising customer data in test datasets and outlining guidelines for production deployments. Open-source libraries were vetted for permissive licences, and acknowledgements for third-party assets are documented in Appendix C.
+Quality relied on code reviews, small checklists for commits, and rerunning core test cases after changes. Test data avoids real customer details. Licences for third-party libraries are permissive, and credits are listed in Appendix C.
 
 ---
 
