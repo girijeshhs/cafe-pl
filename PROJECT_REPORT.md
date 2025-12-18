@@ -369,15 +369,27 @@ Future scope stays within the constraints of the current stack. Documenting a re
 
 ### 8.1 Plan and Schedule
 
-Work was split into requirements, design, build, test, and handoff. A simple 16-week plan guided checkpoints without heavy tooling—weekly check-ins with the mentor kept scope under control. Rough effort split: 3 weeks on requirements and schema drafts, 5 on coding core modules, 3 on testing and fixes, and 2 on documentation, with buffer weeks for integration hiccups.
+Work was split into requirements, design, build, test, and handoff phases to mirror a lightweight SDLC suitable for a single-student project. A 16-week schedule was chosen because it fit the academic term and allowed buffer weeks for integration issues without resorting to overtime. Weekly check-ins with the mentor replaced heavyweight project management tools, ensuring that scope changes were discussed early and that the project stayed aligned with the original constraints of a CLI-only Java/MySQL solution.
+
+The timeline emphasised front-loading clarity: 3 weeks were spent refining requirements and drafting the schema so that later coding would not need major rework. Implementation of core modules occupied 5 weeks, during which database access, menu flows, and transaction handling were built iteratively and verified against the requirement checklist. Testing and fixes consumed the next 3 weeks, focusing on validation edge cases and transaction rollbacks, while documentation and packaging filled the final 2 weeks. Remaining buffer weeks were reserved for integration hiccups, such as aligning SQL scripts with the running MySQL instance on different laptops.
+
+Milestones were deliberately small and demonstrable: “CRUD for customers complete,” “orders commit atomically,” and “seed data loads without errors.” Each milestone required a brief walkthrough to the mentor, substituting for formal stage gates. This approach kept progress visible without introducing new tools or processes, consistent with the goal of keeping the project simple and reproducible in a lab or café setting.
 
 ### 8.2 Resources and Budget
 
-People: the student developer plus mentor feedback and occasional peer reviews. Tools: laptops, MySQL server, Java 17, and free/community IDEs and diagramming tools. Costs were limited to optional printing and any cloud trials, kept low by using free tiers. Risks to schedule (exam periods, shared lab machines) were mitigated by keeping a portable dev setup and regular backups.
+Human resources remained minimal: the student developer handled implementation and testing, while the mentor provided weekly feedback and occasional peer reviews offered a second opinion on usability. This small team size reduced coordination overhead but required disciplined note-taking to capture decisions about validation rules and schema changes. Tooling stayed within standard, no-cost options—Java 17, MySQL, and community IDEs—avoiding any licences that would complicate reuse by classmates.
+
+The budget considerations reflected the low-footprint intent of the system. Hardware consisted of existing laptops; software costs were effectively zero because all dependencies are open source or provided by the university. Optional expenses included printing excerpts of the report for review sessions and brief cloud trials for MySQL, though the default remained local installations to preserve offline capability. Any such trials were kept within free tiers, and no paid services were adopted, consistent with the constraint against new technologies or external platforms.
+
+Operational risks tied to shared lab machines and exam periods were addressed by keeping a portable development setup: the schema script, properties file, and jar could be copied to another machine and run without reinstallation of niche tools. Regular MySQL dumps and git snapshots (when available) protected progress against hardware issues or accidental deletions. These safeguards relied only on built-in utilities, matching the project’s simplicity goals.
 
 ### 8.3 Quality and Compliance
 
-Quality relied on code reviews, small checklists for commits, and rerunning core test cases after changes. Test data avoids real customer details and uses anonymised placeholders. Licences for third-party libraries are permissive, and credits are listed in Appendix C. A short README section documents how to back up and restore the database to satisfy basic operational compliance in a campus setting.
+Quality controls were kept lightweight but consistent. Small checklists accompanied each commit: verify CRUD flows for customers, products, and orders; confirm transaction rollback on failed inserts; and re-run seed data loads to ensure schemas stayed aligned. Peer or mentor reviews focused on clarity of prompts and validation messages because usability depends heavily on precise wording in a CLI. Regression checks were manual but repeatable, reflecting the modest scope and absence of automation frameworks.
+
+Compliance considerations centred on data handling and licensing. Test datasets used anonymised placeholders to avoid storing real customer information, and logs were configured to exclude sensitive fields such as credentials. All third-party components (for example, MySQL Connector/J) carry permissive licences, and acknowledgements are listed in Appendix C to satisfy academic citation requirements. The project avoids any data export to external services, so data ownership remains entirely with the café or the lab environment.
+
+Operational compliance was addressed through simple, documented routines. A short README section explains how to perform MySQL backups and restores using standard commands, ensuring that staff or graders can recover from errors without specialised tools. Because there is no GUI or web surface, security concerns focus on credential handling and principle of least privilege in the database user account. These measures keep the system aligned with campus expectations while preserving the minimal, CLI-first design.
 
 ---
 
