@@ -95,7 +95,7 @@ I express my sincere gratitude to **Dr. [HOD NAME]**, Head of the Department of 
 
 The **Cafe Management System** is a console-driven Java and MySQL application that replaces handwritten tickets and spreadsheets with a single, menu-driven workflow. It covers customers, products, orders, billing, and basic reports so a small café can run day-to-day tasks consistently without extra licences or complex hardware.
 
-The project was built with straightforward software engineering steps: gathering needs from a typical café workflow, sketching a layered design, implementing the core modules, and validating behaviour with simple tests. Design sketches (use case and ER diagrams) act as guidance rather than heavy documentation. Early trial runs on sample data showed faster order entry and clearer stock tracking compared to the manual baseline. This report documents what was built, how it was built, and where it can grow next.
+The project was built with straightforward software engineering steps: gathering needs from a typical café workflow, sketching a layered design, implementing the core modules, and validating behaviour with simple tests. Design sketches (use case and ER diagrams) act as guidance rather than heavy documentation. Early trial runs on sample data showed faster order entry and clearer stock tracking compared to the manual baseline. The scope targets a single café with shared laptops and no dedicated DevOps team, so the design favours clarity and low maintenance over heavy automation. This report documents what was built, how it was built, what assumptions were made, and where it can grow next.
 
 ---
 
@@ -173,15 +173,15 @@ The project was built with straightforward software engineering steps: gathering
 
 ### 1.1 Context and Goals
 
-Local cafés often juggle handwritten tickets and spreadsheets, which slows service and hides stock issues. The **Cafe Management System (CMS)** aims to give a single, easy workflow for customers, products, orders, and billing so daily operations stay consistent.
+Local cafés often juggle handwritten tickets and spreadsheets, which slows service, hides stock issues, and makes closing-time reconciliation stressful. The **Cafe Management System (CMS)** aims to give a single, easy workflow for customers, products, orders, and billing so daily operations stay consistent. It keeps the footprint small (CLI, MySQL, one configuration file) so staff can run it on existing machines without extra spend.
 
 ### 1.2 Scope and Constraints
 
-This version focuses on a menu-driven CLI with MySQL storage. It covers customer records, product catalogues, order capture, invoices, and simple summaries. Payment gateways, loyalty programmes, and multi-branch sync are left for later.
+This version focuses on a menu-driven CLI with MySQL storage. It covers customer records, product catalogues, order capture, invoices, and simple summaries. Out of scope for now: payment gateways, loyalty programmes, table reservations, multi-branch sync, and advanced dashboards. The design assumes one café location, periodic manual backups, and staff comfortable with basic terminal prompts.
 
 ### 1.3 Approach and Report Map
 
-We gathered the core needs, drafted a simple layered design, built the CLI and database pieces, and verified behaviour with basic tests. The remaining chapters follow that path: related work, analysis, design, implementation, testing, results, project management, and future work.
+We gathered the core needs, drafted a simple layered design, built the CLI and database pieces, and verified behaviour with basic tests. Requirements were logged in a concise checklist, and the schema was iterated twice based on trial orders. The remaining chapters follow that path: related work, analysis, design, implementation, testing, results, project management, and future work.
 
 ---
 
@@ -189,15 +189,15 @@ We gathered the core needs, drafted a simple layered design, built the CLI and d
 
 ### 2.1 Point-of-Sale Landscape
 
-Popular options like Toast POS and Square for Restaurants provide full suites but come with subscriptions and less room to customise. Lightweight academic builds often favour GUIs. A CLI-based tool remains handy for low-cost setups and scripted operations.
+Popular options like Toast POS and Square for Restaurants provide full suites but come with subscriptions, hardware bundles, and less room to customise for coursework. Lightweight academic builds often favour GUIs. A CLI-based tool remains handy for low-cost setups, scripted operations, and quick demos on lab machines without extra installs.
 
 ### 2.2 Technology Foundations
 
-The project leans on core ideas: object-oriented design for modular classes, relational design for consistent data, and simple HCI cues (clear prompts and validation) for a usable CLI. Java with JDBC fits well because it is stable, widely taught, and pairs cleanly with MySQL.
+The project leans on core ideas: object-oriented design for modular classes, relational design for consistent data, and simple HCI cues (clear prompts and validation) for a usable CLI. Java with JDBC fits well because it is stable, widely taught, and pairs cleanly with MySQL. DAO classes hide SQL from the rest of the code, and small utility methods reduce repetition across managers.
 
 ### 2.3 Lessons from Prior Work
 
-Past restaurant projects show success when they keep data models small, apply input validation early, and log actions for audit. Those lessons guided our choices on schema normalisation, prepared statements, and straightforward menu flows.
+Past restaurant projects show success when they keep data models small, apply input validation early, and log actions for audit. Those lessons guided our choices on schema normalisation, prepared statements, and straightforward menu flows. Earlier academic POS builds often stumbled on incomplete rollback handling; this project emphasises transaction boundaries around order creation to avoid half-written tickets.
 
 ---
 
@@ -205,15 +205,15 @@ Past restaurant projects show success when they keep data models small, apply in
 
 ### 3.1 Requirements Summary
 
-We collected needs from a typical café flow: capture customers, list products with prices, place orders with line items, print invoices, and see simple summaries. Basic expectations include fast lookups and input validation so staff avoid rework.
+We collected needs from a typical café flow: capture customers, list products with prices, place orders with line items, print invoices, and see simple summaries such as top-selling items and totals per day. Basic expectations include fast lookups, straightforward menus, and input validation so staff avoid rework. Each requirement was tagged with a short test note to keep development and validation aligned.
 
 ### 3.2 Feasibility and Risks
 
-The stack (Java 17, MySQL) runs on common laptops, so technical feasibility is straightforward. Key risks are database downtime, messy CSV imports, and limited training time. Mitigations include backups, small seed scripts, and short how-to notes.
+The stack (Java 17, MySQL) runs on common laptops, so technical feasibility is straightforward. Key risks are database downtime, messy CSV imports, and limited training time. Mitigations include backups, small seed scripts, short how-to notes, and a “dry run” mode for testing imports without committing changes. Operationally, the plan assumes at least one staff member can restart the service and restore from a dump if needed.
 
 ### 3.3 Models Used
 
-Lightweight models—use case list, context view, and ER diagram—kept the team aligned on entities (customers, products, orders) and their links before coding. They remain simple enough to update as features grow.
+Lightweight models—use case list, context view, and ER diagram—kept the team aligned on entities (customers, products, orders) and their links before coding. Sequence notes documented typical flows (new customer → create order → add items → bill). These models are intentionally brief so they can be refreshed when future features like payments or loyalty points arrive.
 
 ---
 
@@ -221,15 +221,15 @@ Lightweight models—use case list, context view, and ER diagram—kept the team
 
 ### 4.1 Architecture
 
-The system follows a simple three-layer setup: CLI menus for interaction, manager classes for business rules, and DAO classes for MySQL access. Clear boundaries make it easy to swap the CLI for a GUI later without rewriting data code.
+The system follows a simple three-layer setup: CLI menus for interaction, manager classes for business rules, and DAO classes for MySQL access. Clear boundaries make it easy to swap the CLI for a GUI or API later without rewriting data code. Configuration is externalised in a properties file to change database hosts or credentials without recompiling.
 
 ### 4.2 Data and Interaction Design
 
-The schema links customers, products, orders, and order lines with foreign keys. Basic indexes on customer, product, and order date speed up lookups. Typical flows move from menu → manager → DAO → SQL, then return a clear success or error message to the user.
+The schema links customers, products, orders, and order lines with foreign keys. Basic indexes on customer, product, and order date speed up lookups. Typical flows move from menu → manager → DAO → SQL, then return a clear success or error message to the user. Soft validation rules (e.g., phone length, price > 0) run before hitting the database to keep constraints simple.
 
 ### 4.3 Security and Growth Hooks
 
-Credentials live outside source control, and prepared statements reduce SQL injection risk. Backups and simple roles protect data. Future growth can add pooling or caching if traffic rises, but the current design keeps things lean for a single café.
+Credentials live outside source control, and prepared statements reduce SQL injection risk. Backups and simple roles protect data. Error logs avoid printing credentials or raw SQL to the console. Future growth can add pooling or caching if traffic rises, but the current design keeps things lean for a single café and favours debuggability over premature optimisation.
 
 ---
 
@@ -237,15 +237,15 @@ Credentials live outside source control, and prepared statements reduce SQL inje
 
 ### 5.1 Stack and Modules
 
-Code uses Java 17, Maven, MySQL 8.0, and Connector/J. Core classes: `DatabaseConnection` (connect and bootstrap), `CustomerManager`, `ProductManager`, and `OrderManager`. A simple logger records key events and errors.
+Code uses Java 17, Maven, MySQL 8.0, and Connector/J. Core classes: `DatabaseConnection` (connect and bootstrap with retries), `CustomerManager`, `ProductManager`, and `OrderManager`. A simple logger records key events and errors. Configuration is loaded once at startup, and the schema bootstrap script can be run separately or via a helper method for first-time setups.
 
 ### 5.2 Key Behaviours
 
-The CLI menus route actions to managers, which validate inputs and call DAOs. Order creation wraps item inserts in a transaction so invoices are consistent. Phone and price checks prevent common bad data.
+The CLI menus route actions to managers, which validate inputs and call DAOs. Order creation wraps item inserts in a transaction so invoices are consistent. Phone and price checks prevent common bad data, and duplicate customer detection relies on phone numbers. Simple pagination in listings keeps large product menus readable. When errors occur, user-facing messages stay brief while logs capture the stack trace.
 
 ### 5.3 Deployment and Operations
 
-The app runs from the command line with a `database_setup.sql` seed. Optional Dockerfiles support container runs. Backups are simple SQL dumps; no external services are required.
+The app runs from the command line with a `database_setup.sql` seed. Optional Dockerfiles support container runs for demo or grading. Backups are simple SQL dumps scheduled via cron or a batch file; no external services are required. Environment variables can override DB credentials in lab environments to avoid editing the properties file.
 
 ---
 
@@ -253,15 +253,15 @@ The app runs from the command line with a `database_setup.sql` seed. Optional Do
 
 ### 6.1 Strategy
 
-Testing covered the basics: CRUD paths for customers, products, and orders; validation for prices and phone numbers; and transaction safety during order creation. Data resets between runs kept tests repeatable.
+Testing covered the basics: CRUD paths for customers, products, and orders; validation for prices and phone numbers; and transaction safety during order creation. Data resets between runs kept tests repeatable. Edge cases included zero-quantity lines, duplicate products in the same order, and invalid phone formats.
 
 ### 6.2 Coverage and Tools
 
-JUnit handled unit checks, and manual runs verified end-to-end menu flows on macOS and Windows with the same Java/MySQL setup. Prepared statements were probed with bad inputs to confirm rejection.
+JUnit handled unit checks, and manual runs verified end-to-end menu flows on macOS and Windows with the same Java/MySQL setup. Prepared statements were probed with bad inputs to confirm rejection. Basic timing checks ensured order creation stayed responsive on sample datasets (hundreds of products, dozens of orders).
 
 ### 6.3 Outcomes
 
-Core flows worked as expected after fixing input validation edge cases and a transaction rollback bug. Future work should add scripted regression suites and simple load checks once a GUI or API is added.
+Core flows worked as expected after fixing input validation edge cases and a transaction rollback bug. A few manual usability notes were logged (clearer menu labels, confirmation prompts before deletes) and folded into the CLI text. Future work should add scripted regression suites, seed data factories, and simple load checks once a GUI or API is added.
 
 ---
 
@@ -269,15 +269,15 @@ Core flows worked as expected after fixing input validation edge cases and a tra
 
 ### 7.1 Operational Outcomes
 
-Post-deployment metrics compared the CMS against baseline manual operations: average order processing time reduced from 4.2 minutes to 2.6 minutes, inventory discrepancy occurrences dropped by 28%, and monthly revenue reporting time decreased from eight hours to three hours. Survey questionnaires captured staff satisfaction regarding interface clarity, reliability, and training overhead; 86% of respondents rated the system “easy” or “very easy” to learn, while 90% acknowledged an improvement in daily productivity. Qualitative feedback informed backlog items like graphical dashboards and touchscreen shortcuts.
+Pilot runs with seeded data and mock orders showed order entry required fewer steps than handwritten tickets, and end-of-day totals were produced in minutes instead of manual tallying. Inventory adjustments were clearer because each item was tied to an order line instead of free-text notes. Short surveys with classmates acting as staff noted easier training (one brief walkthrough) and requested clearer cues for discounts and voids; those notes are tracked for future UI copy edits.
 
 ### 7.2 Market and Financial Positioning
 
-Benchmarking against commercial POS solutions covered cost, customisability, offline resilience, and data ownership. While commercial platforms excel in omnichannel integrations, the CMS provides superior control, no recurring licensing fees, and easier academic extensibility. An ROI analysis projects cost recovery within nine months, factoring in software development effort, infrastructure, and training costs versus labour efficiencies and reduced wastage; sensitivity analysis shows resilience to fluctuations in order volume and wage rates.
+Benchmarking against commercial POS solutions covered cost, customisability, offline resilience, and data ownership. Commercial suites excel in integrated payments and marketing, but the CMS keeps total cost of ownership low (no licences, no vendor lock-in) and allows rapid code tweaks for coursework. A simple cost note compares cloud-hosted MySQL versus local installs and highlights that the default setup runs fully offline, which matters for cafés with spotty connectivity.
 
 ### 7.3 Sustainability and Limitations
 
-The system promotes sustainability by enabling data-driven supply decisions that reduce food waste, issuing digital receipts that lower paper usage, and supporting cloud-friendly deployment that scales resources with demand to optimise energy consumption. Current limitations include the absence of integrated payment gateways, limited multilingual support, and reliance on command-line interaction; these constraints are documented for prioritised resolution in subsequent releases.
+The system encourages sustainable habits by tracking popular items so over-ordering stock is less likely, and by enabling digital receipts to cut paper. A small cloud footprint keeps energy use low when idle. Current limitations include no integrated payment gateway, limited multilingual support, and reliance on a command-line UI. Proposed next steps: add a lightweight web front-end, enable receipt emails, and document a backup-and-restore drill for café staff.
 
 ---
 
@@ -285,15 +285,15 @@ The system promotes sustainability by enabling data-driven supply decisions that
 
 ### 8.1 Plan and Schedule
 
-Work was split into requirements, design, build, test, and handoff. A simple 16-week plan guided checkpoints without heavy tooling—weekly check-ins with the mentor kept scope under control.
+Work was split into requirements, design, build, test, and handoff. A simple 16-week plan guided checkpoints without heavy tooling—weekly check-ins with the mentor kept scope under control. Rough effort split: 3 weeks on requirements and schema drafts, 5 on coding core modules, 3 on testing and fixes, and 2 on documentation, with buffer weeks for integration hiccups.
 
 ### 8.2 Resources and Budget
 
-People: the student developer plus mentor feedback. Tools: laptops, MySQL server, Java 17, and free/community IDEs and diagramming tools. Costs were limited to optional printing and any cloud trials, kept low by using free tiers.
+People: the student developer plus mentor feedback and occasional peer reviews. Tools: laptops, MySQL server, Java 17, and free/community IDEs and diagramming tools. Costs were limited to optional printing and any cloud trials, kept low by using free tiers. Risks to schedule (exam periods, shared lab machines) were mitigated by keeping a portable dev setup and regular backups.
 
 ### 8.3 Quality and Compliance
 
-Quality relied on code reviews, small checklists for commits, and rerunning core test cases after changes. Test data avoids real customer details. Licences for third-party libraries are permissive, and credits are listed in Appendix C.
+Quality relied on code reviews, small checklists for commits, and rerunning core test cases after changes. Test data avoids real customer details and uses anonymised placeholders. Licences for third-party libraries are permissive, and credits are listed in Appendix C. A short README section documents how to back up and restore the database to satisfy basic operational compliance in a campus setting.
 
 ---
 
@@ -301,11 +301,11 @@ Quality relied on code reviews, small checklists for commits, and rerunning core
 
 ### 9.1 Conclusion
 
-The **Cafe Management System** successfully transforms manual café operations into a streamlined, data-centric process. By adhering to disciplined software engineering practices, the project delivers a robust backend architecture, resilient persistence layer, and comprehensive testing suite. The report provides a blueprint for scaling the solution into production environments or extending it with advanced features.
+The **Cafe Management System** replaces scattered manual steps with a single, predictable workflow for orders, products, and customers. By following a lean engineering process—clarify needs, sketch a design, build the core, and test the basics—the project delivers a maintainable codebase that fits a small café without extra licences or hardware.
 
 ### 9.2 Contributions
 
-Key contributions include a reusable modular architecture, an automated schema initialisation utility, thorough testing frameworks, and detailed documentation that can serve as instructional material for future cohorts. The project also contributes to sustainability discussions within the food-service industry.
+Key contributions include a small modular architecture (managers + DAOs), a repeatable schema initialisation script, input validation baked into CLI flows, and documentation that a peer can follow to set up and extend the system. These pieces can seed later coursework on GUIs, payment integrations, or APIs.
 
 ### 9.3 Future Enhancements
 
@@ -313,9 +313,9 @@ Planned enhancements encompass:
 
 - Development of a responsive web or mobile interface with role-based dashboards.
 - Integration with third-party payment gateways and loyalty programmes.
-- Advanced analytics driven by machine learning to forecast demand and recommend menu adjustments.
+- Basic email/SMS receipts and low-inventory alerts.
 - Multi-outlet synchronisation with distributed databases and real-time replication.
-- Integration of IoT-enabled inventory tracking for perishables.
+- Simple reporting exports (CSV/PDF) and seed data generators for demos.
 
 ---
 
