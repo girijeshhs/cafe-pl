@@ -373,29 +373,17 @@ Defects were logged in Jira with severity classifications and resolution timesta
 
 ## CHAPTER 7: RESULTS, EVALUATION, AND DISCUSSION
 
-### 7.1 Key Performance Indicators
+### 7.1 Operational Outcomes
 
-Post-deployment metrics compared the CMS against baseline manual operations. Average order processing time reduced from 4.2 minutes to 2.6 minutes. Inventory discrepancy occurrences dropped by 28%, and monthly revenue reporting time decreased from eight hours to three hours.
+Post-deployment metrics compared the CMS against baseline manual operations: average order processing time reduced from 4.2 minutes to 2.6 minutes, inventory discrepancy occurrences dropped by 28%, and monthly revenue reporting time decreased from eight hours to three hours. Survey questionnaires captured staff satisfaction regarding interface clarity, reliability, and training overhead; 86% of respondents rated the system “easy” or “very easy” to learn, while 90% acknowledged an improvement in daily productivity. Qualitative feedback informed backlog items like graphical dashboards and touchscreen shortcuts.
 
-### 7.2 Comparative Study
+### 7.2 Market and Financial Positioning
 
-The system was benchmarked against commercial POS solutions on parameters such as cost, customisability, offline resilience, and data ownership. While commercial platforms excel in omnichannel integrations, the CMS provides superior control, no recurring licensing fees, and easier academic extensibility.
+Benchmarking against commercial POS solutions covered cost, customisability, offline resilience, and data ownership. While commercial platforms excel in omnichannel integrations, the CMS provides superior control, no recurring licensing fees, and easier academic extensibility. An ROI analysis projects cost recovery within nine months, factoring in software development effort, infrastructure, and training costs versus labour efficiencies and reduced wastage; sensitivity analysis shows resilience to fluctuations in order volume and wage rates.
 
-### 7.3 User Feedback
+### 7.3 Sustainability and Limitations
 
-Survey questionnaires captured staff satisfaction regarding interface clarity, reliability, and training overhead. 86% of respondents rated the system “easy” or “very easy” to learn, while 90% acknowledged an improvement in daily productivity. Qualitative feedback informed backlog items like graphical dashboards and touchscreen shortcuts.
-
-### 7.4 Economic Evaluation
-
-An ROI analysis projects cost recovery within nine months, factoring in software development effort, infrastructure, and training costs versus labour efficiencies and reduced wastage. Sensitivity analysis demonstrates resilience to fluctuations in order volume and wage rates.
-
-### 7.5 Sustainability Considerations
-
-The system promotes sustainability by enabling data-driven supply decisions that reduce food waste. Digital receipts and automated reports decrease paper usage. Cloud-friendly deployment options allow resource scaling aligned with demand, optimising energy consumption.
-
-### 7.6 Limitations
-
-Current limitations include the absence of integrated payment gateways, limited multilingual support, and reliance on command-line interaction. These constraints are documented for prioritised resolution in subsequent releases.
+The system promotes sustainability by enabling data-driven supply decisions that reduce food waste, issuing digital receipts that lower paper usage, and supporting cloud-friendly deployment that scales resources with demand to optimise energy consumption. Current limitations include the absence of integrated payment gateways, limited multilingual support, and reliance on command-line interaction; these constraints are documented for prioritised resolution in subsequent releases.
 
 ---
 
