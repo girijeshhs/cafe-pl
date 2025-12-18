@@ -189,11 +189,11 @@ Potential growth areas are documented but not enabled by default. If order volum
 
 The diagrams below summarize how the CLI app is structured and behaves: the use case shows what staff can do; the class view shows managers, data access, and domain entities; and the sequence shows the transactional order flow.
 
-![Use case diagram for CLI scope](Use%20Case%20Diagram.svg)
+![Use case diagram for CLI scope](../diagrams/Use%20Case%20Diagram.png)
 
-![Class diagram of managers, DAOs, and domain entities](Class%20Diagram.svg)
+![Class diagram of managers, DAOs, and domain entities](../diagrams/Class%20Diagram.png)
 
-![Sequence diagram for placing an order](Sequence%20Diagram.svg)
+![Sequence diagram for placing an order](../diagrams/Sequence%20Diagram.png)
 
 ---
 
