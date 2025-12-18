@@ -1,143 +1,89 @@
-<div align="center">
+# Cafe Management System
 
-# ☕ Cafe Management System
-
-### *A Modern Command-Line Solution for Small Café Operations*
-
-![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=java)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?style=for-the-badge&logo=mysql)
-![JDBC](https://img.shields.io/badge/JDBC-Connector-green?style=for-the-badge)
+A command-line application for managing café operations including customers, products, and orders. Built with Java and MySQL.
 
 ---
 
-</div>
+## Overview
 
-## 📖 What Is This Project About?
+This system provides a simple interface to:
+- Manage customer records (add, view, update, delete)
+- Maintain product catalog with pricing
+- Process orders with automatic billing
+- Track order history and details
 
-Imagine a small café still using **handwritten tickets** and **scattered spreadsheets** to track orders, customers, and inventory. This project replaces that chaos with a **simple, reliable, menu-driven application** that runs entirely in your terminal.
-
-### 🎯 The Core Idea
-
-Instead of juggling papers and risking errors, café staff can:
-- ✅ Store customer information in one place
-- ✅ Maintain a product catalog with prices
-- ✅ Record orders with multiple items
-- ✅ Generate accurate bills instantly
-- ✅ Track inventory changes automatically
-
-**No internet required. No expensive licenses. Just Java, MySQL, and straightforward workflows.**
+**Technology Stack:**
+- Java 17+
+- MySQL 8.0+
+- JDBC Connector 8.x
 
 ---
 
-## 🏗️ How Does It Work? (The Big Picture)
+## Prerequisites
 
-Think of this system as **three connected layers**, like a sandwich:
+Before running this application, ensure you have:
 
-```
-┌─────────────────────────────────────────┐
-│   👤 CLI Menus (User Interface)         │  ← Staff types commands here
-├─────────────────────────────────────────┤
-│   ⚙️  Manager Classes (Business Logic)  │  ← Validates data, handles rules
-├─────────────────────────────────────────┤
-│   💾 Database Layer (MySQL Storage)     │  ← Stores all information safely
-└─────────────────────────────────────────┘
-```
+1. **Java Development Kit (JDK) 17 or higher**
+   ```bash
+   java -version  # Should show 17 or higher
+   ```
 
-### 🔄 Example Workflow: Placing an Order
+2. **MySQL Server 8.0 or higher**
+   ```bash
+   mysql --version
+   ```
 
-Let's walk through what happens when a staff member creates an order:
-
-1. **Staff selects "Place Order"** from the menu
-2. **OrderManager validates** the input (quantities > 0, prices valid)
-3. **Database starts a transaction** (all-or-nothing approach)
-4. **System inserts** order header, line items, and updates stock
-5. **If everything succeeds**, changes are saved; **if not**, everything rolls back
-6. **Bill is printed** to the screen instantly
-
-> 💡 **Key Point**: The transaction ensures you never have half-saved orders cluttering your database.
+3. **MySQL JDBC Driver**  
+   Already included in `lib/mysql-connector-java.jar`
 
 ---
 
-## 🎨 Visual Architecture
+## Installation
 
-Here's how the main components talk to each other:
+### 1. Database Setup
 
-```
-        App.java (Entry Point)
-             │
-     ┌───────┼───────┐
-     │       │       │
-CustomerMgr ProductMgr OrderMgr
-     │       │       │
-     └───────┼───────┘
-             │
-    DatabaseConnection
-             │
-        MySQL Database
-```
-
-**Each manager** handles one domain (customers, products, orders) and uses **prepared statements** to talk safely to MySQL—no SQL injection risks!
-
----
-
-## 🗂️ Database Design (What Gets Stored)
-
-Our MySQL database has **four simple tables**:
-
-| Table | Columns | Purpose |
-|-------|---------|---------|
-| **Customer** | `id`, `name`, `phone` | Stores customer details |
-| **Product** | `id`, `name`, `price` | Catalog of items sold |
-| **Orders** | `id`, `customer_id`, `date` | Order headers |
-| **Order_Details** | `order_id`, `product_id`, `qty` | What was in each order |
-
-### 🔗 Relationships
-- One order → Many products (via `Order_Details`)
-- One customer → Many orders
-
----
-
-## 🚀 Quick Start Guide
-
-### Step 1️⃣: Setup the Database
+Run the provided SQL script to create the database and tables:
 
 ```bash
-# Run the setup script to create tables
 mysql -u root -p < sql/database_setup.sql
 ```
 
-This creates the `cafe_db` database with all four tables ready to use.
+This creates:
+- Database: `cafe_db`
+- Tables: `customer`, `product`, `orders`, `order_details`
+- Sample data for testing
 
-### Step 2️⃣: Configure Connection
+### 2. Configure Database Connection
 
-Open `src/DatabaseConnection.java` and update:
+Edit `src/DatabaseConnection.java` and update your MySQL credentials:
 
 ```java
 private static final String URL = "jdbc:mysql://localhost:3306/cafe_db";
-private static final String USER = "root";        // ← Your MySQL username
-private static final String PASSWORD = "yourpass"; // ← Your MySQL password
+private static final String USER = "root";           // Your MySQL username
+private static final String PASSWORD = "yourpass";   // Your MySQL password
 ```
 
-### Step 3️⃣: Compile and Run
+### 3. Compile the Application
+
+Navigate to the `src` directory and compile:
 
 ```bash
-# Navigate to source folder
 cd src
-
-# Compile everything
 javac -cp "../lib/*:." *.java
-
-# Run the application
-java -cp "../lib/*:." App
 ```
 
 ---
 
-## 🎮 How to Use (The Menus Explained)
+## Running the Application
 
-When you start the app, you'll see a **Main Menu** with three options:
+From the `src` directory, run:
 
-### 📋 Main Menu
+```bash
+java -cp "../lib/*:." App
+```
+
+You'll see the main menu:
+
 ```
 ╔═══════════════════════════════════╗
 ║   CAFE MANAGEMENT SYSTEM          ║
@@ -149,207 +95,208 @@ When you start the app, you'll see a **Main Menu** with three options:
 ╚═══════════════════════════════════╝
 ```
 
-### 👥 Customer Management
-- **Add Customer**: Save name and phone number
-- **View All**: List everyone in the system
-- **Update**: Change phone or name
-- **Delete**: Remove a customer (if no orders exist)
+---
 
-### 🛒 Product Management
-- **Add Product**: Enter name and price
-- **View All**: See the full menu catalog
-- **Update**: Change prices or names
-- **Delete**: Remove discontinued items
+## Usage Guide
 
-### 📦 Order Management
-- **Create Order**: Link to a customer (or leave blank)
-- **Add Items**: Pick products and quantities
-- **View All**: See order history
-- **Delete**: Cancel incorrect orders
+### Customer Management
+
+**Add Customer**
+1. Select option `1` from main menu
+2. Choose `1` to add customer
+3. Enter name and phone number
+
+**View Customers**
+- Select `2` to list all customers with their IDs
+
+**Update Customer**
+- Select `3`, enter customer ID, then provide new name/phone
+
+**Delete Customer**
+- Select `4` and enter customer ID
+- Note: Cannot delete customers with existing orders
+
+### Product Management
+
+**Add Product**
+1. Select option `2` from main menu
+2. Choose `1` to add product
+3. Enter product name and price
+   - Price can include currency symbols (e.g., "240Rs")
+   - System strips non-numeric characters automatically
+
+**View Products**
+- Select `2` to see all products with IDs and prices
+
+**Update Product**
+- Select `3`, enter product ID, then modify name or price
+
+**Delete Product**
+- Select `4` and enter product ID
+- Note: Cannot delete products referenced in orders
+
+### Order Management
+
+**Create New Order**
+1. Select option `3` from main menu
+2. Choose `1` to create order
+3. Enter customer ID (or press Enter to skip for walk-in)
+4. Add products:
+   - Enter product ID
+   - Enter quantity
+   - Repeat for each item
+   - Enter `0` when done
+5. System displays total bill and saves order
+
+**View Orders**
+- Select `2` to see all orders with totals
+- Select `3` to view detailed order items
+
+**Delete Order**
+- Select `4` and enter order ID to cancel
 
 ---
 
-## 💡 Key Features (What Makes This Special)
+## Architecture
 
-### ✨ Transaction Safety
-Every order is wrapped in a **database transaction**. If step 3 fails while adding 5 items, **all 5 are rolled back**—no orphaned data.
+The application follows a layered architecture:
 
-### 🛡️ Input Validation
-The system checks:
-- ✅ Prices must be positive
-- ✅ Phone numbers meet minimum length
-- ✅ Quantities can't be zero
+```
+App.java (Main Menu)
+    ↓
+Manager Classes (CustomerManager, ProductManager, OrderManager)
+    ↓
+DatabaseConnection (JDBC Layer)
+    ↓
+MySQL Database
+```
 
-This stops bad data **before** it reaches the database.
-
-### 📊 Simple Reporting
-Need to know daily totals? The system generates:
-- Revenue summaries
-- Most ordered items
-- Customer order counts
-
-All from the same clean database.
-
-### 🔒 Security Basics
-- **Prepared statements** prevent SQL injection
-- **No passwords in code** (stored in config files)
-- **Local-only** (no web vulnerabilities)
+**Key Components:**
+- `App.java` - Entry point with main menu
+- `CustomerManager.java` - Customer CRUD operations
+- `ProductManager.java` - Product CRUD operations
+- `OrderManager.java` - Order processing with transactions
+- `DatabaseConnection.java` - MySQL connection management
 
 ---
 
-## 📂 Project Structure (Where Everything Lives)
+## Database Schema
+
+### Tables
+
+**customer**
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INT | Primary key (auto-increment) |
+| name | VARCHAR(100) | Customer name |
+| phone | VARCHAR(15) | Contact number |
+
+**product**
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INT | Primary key (auto-increment) |
+| name | VARCHAR(100) | Product name |
+| price | DECIMAL(10,2) | Unit price |
+
+**orders**
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INT | Primary key (auto-increment) |
+| customer_id | INT | Foreign key to customer (nullable) |
+| total_price | DECIMAL(10,2) | Order total |
+
+**order_details**
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INT | Primary key (auto-increment) |
+| order_id | INT | Foreign key to orders |
+| product_id | INT | Foreign key to product |
+| quantity | INT | Quantity ordered |
+| price | DECIMAL(10,2) | Cached product price |
+
+---
+
+## Features
+
+### Transaction Management
+Orders use database transactions to ensure data consistency. If any step fails during order creation, all changes are rolled back automatically.
+
+### Input Validation
+- Prices must be positive numbers
+- Phone numbers validated for minimum length
+- Quantities must be greater than zero
+- Duplicate product IDs prevented in single order
+
+### SQL Injection Prevention
+All database queries use prepared statements to protect against SQL injection attacks.
+
+### Referential Integrity
+Foreign key constraints ensure:
+- Orders cannot reference non-existent customers
+- Order details cannot reference non-existent products or orders
+- Cannot delete products/customers that have related orders
+
+---
+
+## Project Structure
 
 ```
 Cafe-Management_Java/
-│
-├── 📁 src/                      ← All Java source code
-│   ├── App.java                 # Starting point (main method)
-│   ├── CustomerManager.java     # Handles customer CRUD
-│   ├── ProductManager.java      # Handles product CRUD
-│   ├── OrderManager.java        # Handles orders + billing
-│   └── DatabaseConnection.java  # MySQL connection setup
-│
-├── 📁 lib/                      ← External libraries
-│   └── mysql-connector-java.jar # JDBC driver for MySQL
-│
-├── 📁 sql/                      ← Database scripts
-│   └── database_setup.sql       # Creates tables
-│
-├── 📁 docs/                     ← Documentation
-│   ├── PROJECT_REPORT.md        # Full technical report
-│   └── PROJECT_REPORT.docx      # Word version
-│
-├── 📁 diagrams/                 ← UML diagrams
+├── src/                          # Java source files
+│   ├── App.java
+│   ├── CustomerManager.java
+│   ├── ProductManager.java
+│   ├── OrderManager.java
+│   └── DatabaseConnection.java
+├── lib/                          # JDBC driver
+│   └── mysql-connector-java.jar
+├── sql/                          # Database scripts
+│   └── database_setup.sql
+├── docs/                         # Documentation
+│   ├── PROJECT_REPORT.md
+│   └── PROJECT_REPORT.docx
+├── diagrams/                     # UML diagrams
 │   ├── Use Case Diagram.svg
 │   ├── Class Diagram.svg
 │   └── Sequence Diagram.svg
-│
-└── 📁 bin/                      ← Compiled .class files
+└── bin/                          # Compiled classes
 ```
 
 ---
 
-## 🎓 Perfect for Academic Presentations
+## Troubleshooting
 
-### When Explaining to Teachers, Mention:
+### Connection Refused Error
+**Problem:** `Communications link failure`  
+**Solution:** 
+- Verify MySQL is running: `mysql -u root -p`
+- Check connection details in `DatabaseConnection.java`
+- Ensure MySQL port 3306 is not blocked
 
-1. **Why CLI?**  
-   *"No need for complex UI frameworks. Runs on any lab machine with Java and MySQL. Easy to demo via SSH."*
+### ClassNotFoundException
+**Problem:** `java.lang.ClassNotFoundException: com.mysql.cj.jdbc.Driver`  
+**Solution:**
+- Verify `mysql-connector-java.jar` is in `lib/` folder
+- Check classpath includes `../lib/*` when compiling/running
 
-2. **Why No Frameworks?**  
-   *"Using plain JDBC keeps the code transparent—every SQL query is visible, making it ideal for learning database interactions."*
+### Foreign Key Constraint Error
+**Problem:** Cannot delete customer/product  
+**Solution:** This is expected behavior - delete associated orders first to maintain referential integrity
 
-3. **Why Transactions?**  
-   *"Orders involve multiple inserts. Transactions ensure data consistency—either everything saves or nothing does."*
-
-4. **Real-World Application**  
-   *"Small cafés with intermittent internet can run this locally without cloud dependencies or subscription fees."*
-
----
-
-## 🔧 Technical Requirements
-
-| Component | Version | Purpose |
-|-----------|---------|---------|
-| **Java** | 17+ | Core programming language |
-| **MySQL** | 8.0+ | Database for persistent storage |
-| **JDBC Connector** | 8.x | Bridge between Java and MySQL |
-| **OS** | Any (macOS, Windows, Linux) | Cross-platform compatible |
+### Price Input Error
+**Problem:** `InputMismatchException` when entering price  
+**Solution:** System accepts formats like "240Rs" - currency symbols are stripped automatically. Enter positive numbers only.
 
 ---
 
-## 🎯 Design Decisions (Why We Built It This Way)
+## License
 
-### ✅ Command-Line Interface
-- **Pro**: Works over SSH, no graphics libraries needed
-- **Pro**: Fast to navigate for experienced users
-- **Con**: Not suitable for non-technical staff
-
-### ✅ No Web Frontend
-- **Pro**: Zero deployment complexity (no servers)
-- **Pro**: No security risks from web attacks
-- **Con**: Single-user at a time
-
-### ✅ Local MySQL Database
-- **Pro**: Works offline, no cloud costs
-- **Pro**: Full data ownership
-- **Con**: Requires manual backups
+This project is created for educational purposes.
 
 ---
 
-## 🚦 What This Project Does Well
+## Additional Documentation
 
-| Strength | Explanation |
-|----------|-------------|
-| 🟢 **Simple & Teachable** | Code is easy to read—no magic frameworks |
-| 🟢 **Transactional** | Orders are atomic (all-or-nothing) |
-| 🟢 **Validated** | Bad inputs are rejected early |
-| 🟢 **Modular** | Each manager handles one domain |
-
-## 🚧 Known Limitations
-
-| Limitation | Reason |
-|------------|--------|
-| 🟡 **Single User** | No concurrent access handling |
-| 🟡 **CLI Only** | Not suitable for non-technical users |
-| 🟡 **Manual Backups** | No automated backup scheduling |
-| 🟡 **English Only** | No internationalization |
-
----
-
-## 📝 Sample Demo Script (For Your Presentation)
-
-> *"Good morning. Today I'll demonstrate a Cafe Management System built with Java and MySQL.*
->
-> *The problem: Small cafés rely on paper tickets, which cause errors and slow down service.*
->
-> *Our solution: A command-line application that stores customers, products, and orders in MySQL.*
->
-> *Let me show you the flow. First, I add a customer—here's 'John Doe' with his phone number. Now I add a product—'Cappuccino' at ₹120.*
->
-> *To create an order: Select customer, add products with quantities. The system validates everything, wraps it in a transaction, and generates a bill.*
->
-> *If any step fails—say, an invalid quantity—the entire order rolls back. This keeps the database consistent.*
->
-> *The architecture uses three layers: CLI menus for input, manager classes for validation, and JDBC for database access. All SQL uses prepared statements to prevent injection attacks.*
->
-> *This project demonstrates core JDBC concepts, transaction management, and clean separation of concerns—all without external frameworks.*
->
-> *Thank you. I'm ready for questions."*
-
----
-
-## 🏆 Learning Outcomes
-
-By building and presenting this project, you demonstrate understanding of:
-
-- ✅ **JDBC fundamentals** (Connection, Statement, ResultSet)
-- ✅ **Transaction management** (commit, rollback)
-- ✅ **Database design** (normalization, foreign keys)
-- ✅ **Input validation** (preventing bad data)
-- ✅ **Modular code organization** (separation of concerns)
-- ✅ **Error handling** (try-catch, logging)
-
----
-
-## 📚 Additional Resources
-
-- **Full Technical Report**: See [docs/PROJECT_REPORT.md](docs/PROJECT_REPORT.md)
-- **UML Diagrams**: Check [diagrams/](diagrams/) folder
-- **SQL Scripts**: All in [sql/](sql/) folder
-
----
-
-<div align="center">
-
-### 🎉 Ready to Run?
-
-Follow the **Quick Start Guide** above and you'll have the system running in 5 minutes!
-
-**Questions?** Check the technical report or review the inline comments in the source code.
-
----
-
-*Made with ☕ for academic demonstration*
-
-</div>
+- **Detailed Technical Report:** [docs/PROJECT_REPORT.md](docs/PROJECT_REPORT.md)
+- **UML Diagrams:** [diagrams/](diagrams/) folder
+- **Database Scripts:** [sql/](sql/) folder
