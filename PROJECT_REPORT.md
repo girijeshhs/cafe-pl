@@ -1,101 +1,14 @@
-<div align="center">
-
-**CAFE MANAGEMENT SYSTEM**  
-<span style="font-size:16px;">(A Comprehensive Project Report)</span>
-
-<br />
-
-<span style="font-size:14px;">Submitted by</span>  
-<em><span style="font-size:14px;">[YOUR NAME], [REGISTER NUMBER]</span></em>
-
-<br />
-
-<span style="font-size:14px;">Under the guidance of</span>  
-<span style="font-size:16px;">[SUPERVISOR NAME]</span>  
-(Department of Computer Science and Engineering)
-
-<br />
-
-<em><span style="font-size:14px;">In partial fulfilment of the requirements for the award of the degree</span></em>
-
-<span style="font-size:16px;">BACHELOR OF TECHNOLOGY</span>  
-<span style="font-size:14px;">in</span>  
-<span style="font-size:16px;">COMPUTER SCIENCE AND ENGINEERING WITH SPECIALIZATION IN ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING</span>
-
-<br />
-
-FACULTY OF ENGINEERING AND TECHNOLOGY  
-SRM INSTITUTE OF SCIENCE AND TECHNOLOGY, RAMAPURAM, CHENNAI-600089  
-<span style="font-size:14px;">DECEMBER 2025</span>
-
-</div>
-
----
-
-<div align="center">
-
-**SRM INSTITUTE OF SCIENCE AND TECHNOLOGY**  
-<span style="font-size:16px;">(Deemed to be University u/S 3 of UGC Act, 1956)</span>
-
-<br />
-
-**BONAFIDE CERTIFICATE**
-
-</div>
-
-The report titled **“CAFE MANAGEMENT SYSTEM”** is the bonafide work of **[YOUR NAME] ([REGISTER NUMBER])** who carried out the project work under my supervision during the academic year **2024 – 2025**. To the best of my knowledge, the work embodied in this report has not been submitted for the award of any degree, diploma, fellowship, or similar title previously.
-
-<br />
-
-<div align="right">
-
-**Signature**  
-[SUPERVISOR NAME]  
-Supervisor, Department of Computer Science and Engineering  
-SRM Institute of Science and Technology, Ramapuram
-
-</div>
-
----
-
-<div align="center">
-
-**DECLARATION**
-
-</div>
-
-I, **[YOUR NAME] ([REGISTER NUMBER])**, hereby declare that the project work entitled **“CAFE MANAGEMENT SYSTEM”** submitted to **SRM Institute of Science and Technology, Ramapuram** in partial fulfilment of the requirements for the award of the degree of **Bachelor of Technology in Computer Science and Engineering with Specialization in Artificial Intelligence and Machine Learning** is a record of the original work carried out by me under the supervision of **[SUPERVISOR NAME]**. This project work has not formed the basis for the award of any degree or diploma previously.
-
-<br />
-
-<div align="right">
-
-**[YOUR NAME]**  
-Date: ___ / ___ / 2025
-
-</div>
-
----
-
-<div align="center">
-
-**ACKNOWLEDGEMENT**
-
-</div>
-
-I express my sincere gratitude to **Dr. [HOD NAME]**, Head of the Department of Computer Science and Engineering, for providing the necessary facilities and support to carry out this project. My heartfelt thanks go to my mentor **[SUPERVISOR NAME]** for continuous guidance, constructive feedback, and valuable insights that significantly refined the technical and academic quality of this report. I am also grateful to the faculty members and staff of the department for their encouragement. Finally, I thank my family and peers for their unwavering support and patience throughout this endeavour.
-
----
-
-<div align="center">
-
 **ABSTRACT**
 
 </div>
 
-The **Cafe Management System** is a console-driven Java and MySQL application that replaces handwritten tickets and spreadsheets with a single, menu-driven workflow. It covers customers, products, orders, billing, and basic reports so a small café can run day-to-day tasks consistently without extra licences or complex hardware.
+The **Cafe Management System** is a console-driven Java application backed by MySQL that replaces handwritten tickets and scattered spreadsheets with a single, menu-driven workflow. It covers the essential operational domains of a small café—customers, products, orders, billing, and basic reporting—while deliberately excluding graphical interfaces, cloud services, and external payment integrations. The purpose is to provide a predictable, low-cost alternative to paper processes that can run on shared café or lab laptops without additional licences or specialised hardware.
 
-The project was built with straightforward software engineering steps: gathering needs from a typical café workflow, sketching a layered design, implementing the core modules, and validating behaviour with simple tests. Design sketches (use case and ER diagrams) act as guidance rather than heavy documentation. Early trial runs on sample data showed faster order entry and clearer stock tracking compared to the manual baseline. The scope targets a single café with shared laptops and no dedicated DevOps team, so the design favours clarity and low maintenance over heavy automation. This report documents what was built, how it was built, what assumptions were made, and where it can grow next.
+The scope is intentionally narrow to match a single-location café with intermittent connectivity and no dedicated DevOps support. All interactions occur through the command line; data is stored locally in MySQL; and configuration is consolidated in one properties file to simplify deployment and maintenance. Assumptions include modest transaction volumes, a small staff who can operate a CLI, and an environment where periodic manual backups are acceptable. Constraints explicitly rule out web front-ends, mobile clients, third-party gateways, and analytics tooling so that the system remains transparent, teachable, and easy to troubleshoot.
+
+Development followed a straightforward engineering path: requirements were distilled from everyday café tasks, a lightweight layered design separated CLI menus from manager logic and data access, and the schema was defined around customers, products, orders, and order line items. Implementation used plain Java and JDBC with prepared statements to maintain data integrity, and transactions ensured that multi-item orders either committed fully or rolled back cleanly. Validation combined small seed datasets, repeatable test runs of CRUD flows, and manual end-to-end exercises on common operating systems to confirm that behaviour matched the specified constraints.
+
+Early trial runs on sample data demonstrated faster order capture, clearer stock tracking, and quicker end-of-day reconciliation compared to the manual baseline. The system’s simplicity makes it suitable for coursework demonstration and for small cafés that value predictable workflows over feature breadth. This report documents the design choices, implementation steps, testing approach, assumptions, and identified areas for incremental growth, all within the confines of a CLI-only Java and MySQL stack.
 
 ---
 
@@ -107,14 +20,14 @@ The project was built with straightforward software engineering steps: gathering
 
 - Acknowledgement
 - Abstract
-- Chapter 1: Introduction
-- Chapter 2: Literature Review
-- Chapter 3: System Analysis
-- Chapter 4: System Design
-- Chapter 5: Implementation
-- Chapter 6: Testing and Validation
-- Chapter 7: Results, Evaluation, and Discussion
-- Chapter 8: Project Management and Sustainability
+- Chapter 1: Introduction (Context, Scope, Approach)
+- Chapter 2: Literature Review (POS Landscape, Technology Foundations, Lessons Learned)
+- Chapter 3: System Analysis (Requirements, Feasibility, Models)
+- Chapter 4: System Design (Architecture, Data and Interaction Design, Security Considerations)
+- Chapter 5: Implementation (Stack, Key Behaviours, Deployment and Operations)
+- Chapter 6: Testing and Validation (Strategy, Coverage, Outcomes)
+- Chapter 7: Results, Evaluation, and Discussion (Operational Outcomes, Positioning, Limitations)
+- Chapter 8: Project Management and Sustainability (Plan, Resources, Quality)
 - Chapter 9: Conclusion and Future Work
 - References
 - Appendices
@@ -123,24 +36,24 @@ The project was built with straightforward software engineering steps: gathering
 
 <div align="center">
 
-**LIST OF FIGURES** (to be inserted when diagrams are added)
+**LIST OF FIGURES**
 
 </div>
 
-- Figure 1: Layered architecture overview (placeholder)
-- Figure 2: Class diagram (placeholder)
-- Figure 3: Entity-relationship sketch (placeholder)
+- Figure 1: Layered architecture overview for the CLI, managers, and data access
+- Figure 2: Class diagram of manager and DAO interactions
+- Figure 3: Entity-relationship diagram for customers, products, orders, and order items
 
 ---
 
 <div align="center">
 
-**LIST OF TABLES** (to be inserted when tables are added)
+**LIST OF TABLES**
 
 </div>
 
-- Table 1: Requirements summary (placeholder)
-- Table 2: Test plan summary (placeholder)
+- Table 1: Requirements summary
+- Table 2: Test plan summary
 
 ---
 
@@ -150,19 +63,13 @@ The project was built with straightforward software engineering steps: gathering
 
 </div>
 
-- API — Application Programming Interface  
 - CLI — Command Line Interface  
 - CRUD — Create, Read, Update, Delete  
+- DAO — Data Access Object  
 - DBMS — Database Management System  
 - ER — Entity Relationship  
-- GUI — Graphical User Interface  
-- IDE — Integrated Development Environment  
 - JDBC — Java Database Connectivity  
-- JSON — JavaScript Object Notation  
-- KPI — Key Performance Indicator  
-- MVC — Model View Controller  
 - OOP — Object-Oriented Programming  
-- ROI — Return on Investment  
 - SDLC — Software Development Life Cycle  
 - SQL — Structured Query Language  
 - UML — Unified Modeling Language  
