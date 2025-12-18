@@ -397,21 +397,23 @@ Operational compliance was addressed through simple, documented routines. A shor
 
 ### 9.1 Conclusion
 
-The **Cafe Management System** replaces scattered manual steps with a single, predictable workflow for orders, products, and customers. By following a lean engineering process—clarify needs, sketch a design, build the core, and test the basics—the project delivers a maintainable codebase that fits a small café without extra licences or hardware.
+The **Cafe Management System** replaces scattered manual steps with a single, predictable workflow for orders, products, and customers. The project demonstrates that a lean, CLI-only approach—grounded in Java and MySQL—can meaningfully improve consistency without adding operational overhead or licensing costs. By keeping the interface text-based and the database local, the solution remains aligned with the realities of a single café that relies on shared laptops and intermittent connectivity.
+
+The development process followed straightforward steps: clarify needs drawn from day-to-day café tasks, sketch a minimal layered design, implement only the required flows, and validate behaviour against those same needs. This discipline prevented scope creep into web or mobile features and kept the codebase small enough to be understood quickly by peers. The resulting application shows that predictable menus, basic validation, and transactional order handling are sufficient to replace handwritten tickets while staying within tight constraints.
+
+Overall, the CMS meets its primary objectives: it streamlines order capture, reduces reconciliation errors, and provides a baseline for future incremental enhancements. The outcome is intentionally modest—no cloud services, no GUI, and no external integrations—because reliability and maintainability for a single site were prioritised over breadth of features. This positioning makes the system a practical teaching artefact and a workable tool for a small café.
 
 ### 9.2 Contributions
 
-Key contributions include a small modular architecture (managers + DAOs), a repeatable schema initialisation script, input validation baked into CLI flows, and documentation that a peer can follow to set up and extend the system. These pieces can seed later coursework on GUIs, payment integrations, or APIs.
+Key contributions include a small modular architecture that separates CLI menus, manager logic, and data access so that each layer can be modified independently without side effects. The repeatable schema initialisation script ensures that any lab machine or café laptop can be brought to a known-good state quickly, reducing setup friction. Input validation is embedded at the CLI edge to stop bad data—negative prices, zero quantities, implausible phone numbers—before it reaches MySQL, reinforcing data quality with minimal code.
+
+Documentation and operational notes were treated as first-class outputs. Clear instructions for configuring the properties file, running the SQL setup, and executing the jar mean that peers can reproduce results without extra tools. The testing approach, though lightweight, ties directly to requirements, showing how to exercise CRUD flows, transactions, and seed data loads on both macOS and Windows. Collectively, these elements form a cohesive template that future coursework can extend while staying transparent and easy to audit.
 
 ### 9.3 Future Enhancements
 
-Planned enhancements encompass:
+Future work remains within the existing CLI-and-MySQL stack to preserve the project’s simplicity. One priority is strengthening operational resilience: documenting and rehearsing a backup-and-restore drill, adding clearer CLI help text for error recovery, and shipping seed data packs to speed classroom demonstrations. Another is deepening test coverage with a small regression script that exercises core CRUD and transaction paths after each code change, improving confidence without new tools.
 
-- Development of a responsive web or mobile interface with role-based dashboards.
-- Integration with third-party payment gateways and loyalty programmes.
-- Basic email/SMS receipts and low-inventory alerts.
-- Multi-outlet synchronisation with distributed databases and real-time replication.
-- Simple reporting exports (CSV/PDF) and seed data generators for demos.
+Reporting can be made more useful while staying text-based. Examples include richer on-demand summaries (top-selling items over a chosen date range) and optional CSV exports generated directly from the CLI for offline analysis. Usability refinements—such as more explicit prompts for discounts or voids, and optional confirmation steps before destructive actions—can be added without altering the architecture. All proposed enhancements avoid new technologies, GUIs, or external services, ensuring the system remains a straightforward Java CLI over MySQL.
 
 ---
 
