@@ -285,15 +285,27 @@ Potential growth areas are documented but not enabled by default. If order volum
 
 ### 5.1 Stack and Modules
 
-Code uses Java 17, Maven, MySQL 8.0, and Connector/J. Core classes: `DatabaseConnection` (connect and bootstrap with retries), `CustomerManager`, `ProductManager`, and `OrderManager`. A simple logger records key events and errors. Configuration is loaded once at startup, and the schema bootstrap script can be run separately or via a helper method for first-time setups.
+The implementation relies on a small, stable toolchain: Java 17 for the CLI application, Maven for builds and dependency management, and MySQL 8.0 with Connector/J for database access. This selection avoids third-party frameworks and keeps the runtime easy to reproduce on typical lab or café laptops. Each dependency is widely available, well-documented, and familiar to undergraduate courses, reducing setup friction and making the code easier to review.
+
+Core classes are organised by responsibility. `DatabaseConnection` handles driver loading, connection acquisition, and optional bootstrap of the schema; it includes simple retry logic to cope with transient startup issues. `CustomerManager`, `ProductManager`, and `OrderManager` encapsulate business rules for their respective domains—validating inputs, orchestrating transactions, and delegating persistence to DAO methods. A minimal logger records key events and exceptions to aid debugging without overwhelming operators with technical details.
+
+Configuration is read once at startup from a properties file that specifies database host, port, schema, user, and password. This keeps deployment flexible without recompiling. The schema bootstrap script (`database_setup.sql`) can be executed manually or via a helper method on first run, ensuring that tables and basic constraints exist before regular use. No background services are required; the application runs in a single process, matching the simplicity goals of the project.
 
 ### 5.2 Key Behaviours
 
-The CLI menus route actions to managers, which validate inputs and call DAOs. Order creation wraps item inserts in a transaction so invoices are consistent. Phone and price checks prevent common bad data, and duplicate customer detection relies on phone numbers. Simple pagination in listings keeps large product menus readable. When errors occur, user-facing messages stay brief while logs capture the stack trace.
+User actions begin at the CLI menus, which map directly to manager methods. Each manager validates incoming data—ensuring, for example, that prices are positive, quantities are non-zero, and phone numbers meet basic length rules—before invoking DAO calls. This validation at the edge reduces invalid SQL operations and keeps feedback immediate for the operator.
+
+Order creation is treated as a multi-step transaction: adding the order header, inserting each line item, and committing only if all inserts succeed. If any step fails, the transaction rolls back to avoid partial orders and inconsistent totals. Duplicate customer detection uses phone numbers as a practical identifier, reducing repeated entries while accommodating cafés that may not capture email addresses.
+
+List views apply simple pagination to keep output readable when the product catalogue grows. Errors are communicated with brief, plain-language messages so staff understand what to do next, while detailed stack traces and SQL errors are written to logs for troubleshooting. This balance keeps the CLI approachable without hiding diagnostic information from maintainers.
 
 ### 5.3 Deployment and Operations
 
-The app runs from the command line with a `database_setup.sql` seed. Optional Dockerfiles support container runs for demo or grading. Backups are simple SQL dumps scheduled via cron or a batch file; no external services are required. Environment variables can override DB credentials in lab environments to avoid editing the properties file.
+Deployment is intentionally lightweight. The application runs directly from the command line; after configuring the properties file, a user executes the jar, and the system connects to MySQL using the provided credentials. The `database_setup.sql` script seeds tables and constraints for first-time installations and can be rerun safely on a fresh schema.
+
+For classroom demonstrations or repeatable grading, the provided Dockerfiles allow the app and MySQL to be containerised together, but this is optional and not a runtime dependency. Routine backups rely on standard MySQL dump commands scheduled via cron or a simple batch file—no cloud services or external schedulers are assumed. Environment variables can override credentials when running in shared labs to avoid editing configuration files directly, which simplifies resets between sessions.
+
+Operational tasks are kept to a minimum: start the database, run the application, and perform periodic dumps. There is no background daemon or web server to monitor. This approach aligns with the constraint of a small café or academic lab where dedicated operations staff are not available.
 
 ---
 
