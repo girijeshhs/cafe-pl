@@ -204,6 +204,25 @@ public class ProductManager {
         
         if (conn != null) {
             try {
+                // First, check if product is used in any orders
+                String checkSql = "SELECT COUNT(*) FROM Order_Details WHERE product_id = ?";
+                PreparedStatement checkStmt = conn.prepareStatement(checkSql);
+                checkStmt.setInt(1, id);
+                ResultSet rs = checkStmt.executeQuery();
+                
+                if (rs.next() && rs.getInt(1) > 0) {
+                    System.out.println("⚠️  Cannot delete this product!");
+                    System.out.println("   This product is part of existing orders.");
+                    System.out.println("   Please remove it from all orders first.");
+                    rs.close();
+                    checkStmt.close();
+                    return;
+                }
+                
+                rs.close();
+                checkStmt.close();
+                
+                // If no orders reference this product, proceed with deletion
                 String sql = "DELETE FROM Product WHERE product_id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 pstmt.setInt(1, id);
@@ -211,7 +230,7 @@ public class ProductManager {
                 int rows = pstmt.executeUpdate();
                 
                 if (rows > 0) {
-                    System.out.println("Product deleted successfully!");
+                    System.out.println("✓ Product deleted successfully!");
                 } else {
                     System.out.println("Product not found!");
                 }
