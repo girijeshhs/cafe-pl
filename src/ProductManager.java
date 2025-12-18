@@ -52,9 +52,27 @@ public class ProductManager {
         System.out.print("Enter product name: ");
         String name = scanner.nextLine();
         
-        System.out.print("Enter product price: ");
-        double price = scanner.nextDouble();
-        scanner.nextLine(); // consume newline
+        double price = 0;
+        boolean validInput = false;
+        
+        while (!validInput) {
+            System.out.print("Enter product price: ");
+            String priceInput = scanner.nextLine().trim();
+            
+            // Remove common currency symbols and letters
+            priceInput = priceInput.replaceAll("[^0-9.]", "");
+            
+            try {
+                price = Double.parseDouble(priceInput);
+                if (price <= 0) {
+                    System.out.println("Price must be greater than 0. Please try again.");
+                } else {
+                    validInput = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid price format. Please enter a valid number.");
+            }
+        }
         
         Connection conn = DatabaseConnection.getConnection();
         
@@ -125,9 +143,27 @@ public class ProductManager {
         System.out.print("Enter new product name: ");
         String name = scanner.nextLine();
         
-        System.out.print("Enter new price: ");
-        double price = scanner.nextDouble();
-        scanner.nextLine(); // consume newline
+        double price = 0;
+        boolean validInput = false;
+        
+        while (!validInput) {
+            System.out.print("Enter new price: ");
+            String priceInput = scanner.nextLine().trim();
+            
+            // Remove common currency symbols and letters
+            priceInput = priceInput.replaceAll("[^0-9.]", "");
+            
+            try {
+                price = Double.parseDouble(priceInput);
+                if (price <= 0) {
+                    System.out.println("Price must be greater than 0. Please try again.");
+                } else {
+                    validInput = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid price format. Please enter a valid number.");
+            }
+        }
         
         Connection conn = DatabaseConnection.getConnection();
         
