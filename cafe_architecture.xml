@@ -1,0 +1,153 @@
+<mxfile host="app.diagrams.net" modified="2025-12-18T00:00:00.000Z" agent="GitHub Copilot" version="22.1.0">
+  <diagram name="Cafe Management Architecture" id="cafe-arch">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Layer 1: Presentation Layer -->
+        <mxCell id="layer1" value="Presentation Layer - CLI Interface" style="swimlane;fillColor=#E3F2FD;strokeColor=#1E88E5;strokeWidth=2;fontSize=14;fontStyle=1;startSize=30;" vertex="1" parent="1">
+          <mxGeometry x="80" y="50" width="1240" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="app" value="App.java&#10;Main Entry Point &amp; Menu Controller" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3E5FC;strokeColor=#01579B;strokeWidth=3;fontSize=13;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="470" y="45" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="menu1" value="Customer Menu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="240" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="menu2" value="Product Menu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="240" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="menu3" value="Order Menu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="240" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="menu4" value="Billing &amp; Reports" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="240" width="180" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- Layer 2: Business Logic Layer -->
+        <mxCell id="layer2" value="Business Logic Layer - Managers" style="swimlane;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=2;fontSize=14;fontStyle=1;startSize=30;" vertex="1" parent="1">
+          <mxGeometry x="80" y="350" width="1240" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="cm" value="CustomerManager&#10;• Validate customer data&#10;• Check duplicates&#10;• Phone/email validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;strokeWidth=2;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="layer2">
+          <mxGeometry x="90" y="45" width="260" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="pm" value="ProductManager&#10;• Validate prices&#10;• Stock management&#10;• Product CRUD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;strokeWidth=2;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="layer2">
+          <mxGeometry x="440" y="45" width="260" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="om" value="OrderManager&#10;• Order transactions&#10;• Calculate totals&#10;• Generate invoices" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;strokeWidth=2;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="layer2">
+          <mxGeometry x="790" y="45" width="260" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- Layer 3: Data Access Layer -->
+        <mxCell id="layer3" value="Data Access Layer - DAO" style="swimlane;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=2;fontSize=14;fontStyle=1;startSize=30;" vertex="1" parent="1">
+          <mxGeometry x="80" y="570" width="1240" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="dbc" value="DatabaseConnection&#10;• JDBC driver management&#10;• Connection pooling&#10;• Schema initialization" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F57F17;strokeWidth=3;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="layer3">
+          <mxGeometry x="470" y="45" width="300" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="cdao" value="Customer DAO&#10;• CRUD operations&#10;• Prepared statements" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=2;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="150" y="795" width="220" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="pdao" value="Product DAO&#10;• CRUD operations&#10;• Prepared statements" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=2;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="510" y="795" width="220" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="odao" value="Order DAO&#10;• Transaction management&#10;• Multi-table operations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=2;fontSize=11;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="870" y="795" width="220" height="90" as="geometry"/>
+        </mxCell>
+        
+        <!-- Layer 4: Database Layer -->
+        <mxCell id="layer4" value="Database Layer - MySQL" style="swimlane;fillColor=#FCE4EC;strokeColor=#C2185B;strokeWidth=2;fontSize=14;fontStyle=1;startSize=30;" vertex="1" parent="1">
+          <mxGeometry x="80" y="935" width="1240" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="cust" value="customers&#10;─────────&#10;customer_id (PK)&#10;name&#10;phone&#10;email" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#F8BBD0;strokeColor=#C2185B;strokeWidth=2;fontSize=11;fontStyle=1;size=15;" vertex="1" parent="layer4">
+          <mxGeometry x="90" y="50" width="180" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="prod" value="products&#10;─────────&#10;product_id (PK)&#10;name&#10;price&#10;stock" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#F8BBD0;strokeColor=#C2185B;strokeWidth=2;fontSize=11;fontStyle=1;size=15;" vertex="1" parent="layer4">
+          <mxGeometry x="360" y="50" width="180" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="ord" value="orders&#10;─────────&#10;order_id (PK)&#10;customer_id (FK)&#10;order_date&#10;total" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#F8BBD0;strokeColor=#C2185B;strokeWidth=2;fontSize=11;fontStyle=1;size=15;" vertex="1" parent="layer4">
+          <mxGeometry x="630" y="50" width="180" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="items" value="order_items&#10;─────────&#10;item_id (PK)&#10;order_id (FK)&#10;product_id (FK)&#10;quantity, price" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#F8BBD0;strokeColor=#C2185B;strokeWidth=2;fontSize=11;fontStyle=1;size=15;" vertex="1" parent="layer4">
+          <mxGeometry x="900" y="50" width="180" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- Arrows: App to Menus -->
+        <mxCell id="a1" edge="1" parent="1" source="app" target="menu1" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" edge="1" parent="1" source="app" target="menu2" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" edge="1" parent="1" source="app" target="menu3" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" edge="1" parent="1" source="app" target="menu4" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Arrows: Menus to Managers -->
+        <mxCell id="a5" edge="1" parent="1" source="menu1" target="cm" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a6" edge="1" parent="1" source="menu2" target="pm" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a7" edge="1" parent="1" source="menu3" target="om" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a8" edge="1" parent="1" source="menu4" target="om" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Arrows: Managers to DAOs -->
+        <mxCell id="a9" edge="1" parent="1" source="cm" target="cdao" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a10" edge="1" parent="1" source="pm" target="pdao" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a11" edge="1" parent="1" source="om" target="odao" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Arrows: DAOs to DatabaseConnection -->
+        <mxCell id="a12" edge="1" parent="1" source="cdao" target="dbc" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a13" edge="1" parent="1" source="pdao" target="dbc" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a14" edge="1" parent="1" source="odao" target="dbc" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Arrows: DatabaseConnection to Tables -->
+        <mxCell id="a15" edge="1" parent="1" source="dbc" target="cust" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a16" edge="1" parent="1" source="dbc" target="prod" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a17" edge="1" parent="1" source="dbc" target="ord" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a18" edge="1" parent="1" source="dbc" target="items" style="endArrow=classic;strokeColor=#455A64;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Foreign Key Relations (dashed) -->
+        <mxCell id="fk1" edge="1" parent="1" source="ord" target="cust" style="endArrow=classic;strokeColor=#999999;strokeWidth=2;dashed=1;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="fk2" edge="1" parent="1" source="items" target="ord" style="endArrow=classic;strokeColor=#999999;strokeWidth=2;dashed=1;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="fk3" edge="1" parent="1" source="items" target="prod" style="endArrow=classic;strokeColor=#999999;strokeWidth=2;dashed=1;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
