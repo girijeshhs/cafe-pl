@@ -30,7 +30,6 @@ Early trial runs on sample data demonstrated faster order capture, clearer stock
 - Chapter 8: Project Management and Sustainability (Plan, Resources, Quality)
 - Chapter 9: Conclusion and Future Work
 - References
-- Appendices
 
 ---
 
@@ -40,9 +39,9 @@ Early trial runs on sample data demonstrated faster order capture, clearer stock
 
 </div>
 
-- Figure 1: Layered architecture overview for the CLI, managers, and data access
-- Figure 2: Class diagram of manager and DAO interactions
-- Figure 3: Entity-relationship diagram for customers, products, orders, and order items
+- Figure 1: Use case diagram for CLI scope
+- Figure 2: Class diagram of managers, DAO interactions, and domain entities
+- Figure 3: Sequence diagram for placing an order
 
 ---
 
@@ -185,6 +184,14 @@ Security measures focus on what is practical for a single-location CLI deploymen
 Data protection relies on straightforward practices: periodic MySQL dumps for backups, simple database roles with only the permissions needed by the application, and clear operator instructions for restore procedures. Because there is no web surface, the threat model is limited to local misuse or misconfiguration, so controls emphasise principle of least privilege and recoverability rather than perimeter defences.
 
 Potential growth areas are documented but not enabled by default. If order volume rises, connection pooling could be added to reuse database connections, and basic caching could reduce repeated product lookups. These remain optional to keep the current deployment lean and debuggable, aligning with the constraint of a small café without dedicated infrastructure.
+
+### 4.4 UML Diagrams
+
+![Use case diagram for CLI scope](Use%20Case%20Diagram.svg)
+
+![Class diagram of managers, DAOs, and domain entities](Class%20Diagram.svg)
+
+![Sequence diagram for placing an order](Sequence%20Diagram.svg)
 
 ---
 
@@ -341,112 +348,6 @@ Reporting can be made more useful while staying text-based. Examples include ric
 13. SRM Institute of Science and Technology, *Project Report Guidelines*, 2024.  
 14. HikariCP, *Connection Pooling Best Practices*, 2025.  
 15. IEEE, *SWEBOK: Guide to the Software Engineering Body of Knowledge*, 2024.
-
----
-
-## APPENDICES
-
-### Appendix A: Sample CLI Screenshots
-
-1. Main menu with customer, product, and order modules.  
-2. Order creation workflow highlighting validation prompts.  
-3. Administrative report summary output.
-
-### Appendix B: Deployment Artefacts
-
-- Dockerfile for containerised deployment.  
-- Docker Compose configuration for MySQL and application services.  
-- Shell script for automated backups and log rotation.
-
-### Appendix C: User Training Materials
-
-- Quick-start guide for café staff.  
-- Troubleshooting checklist for common issues.  
-- Maintenance schedule for database backups and updates.
-
-### Appendix D: UML Diagrams
-
-Use Case Diagram (PlantUML):
-```
-@startuml
-actor Staff
-rectangle "Cafe Management System (CLI)" {
-	usecase "Manage Customers" as UC1
-	usecase "Manage Products/Menu Items" as UC2
-	usecase "Place Order" as UC3
-	usecase "Generate Bill" as UC4
-	usecase "Update Inventory" as UC5
-	usecase "View Basic Reports" as UC6
-}
-
-Staff --> UC1
-Staff --> UC2
-Staff --> UC3
-Staff --> UC4
-Staff --> UC5
-Staff --> UC6
-UC3 --> UC4 : includes
-@enduml
-```
-Purpose: Single actor (Staff) interacts with core CLI features—customer/product CRUD, orders, billing, inventory updates, and basic reports—matching the local Java + MySQL scope.
-
-Class Diagram (PlantUML):
-```
-@startuml
-class App {
-	+main(args)
-}
-
-class CustomerManager {
-	+addCustomer(...)
-	+updateCustomer(...)
-	+listCustomers()
-	+deleteCustomer(...)
-}
-
-class ProductManager {
-	+addProduct(...)
-	+updateProduct(...)
-	+listProducts()
-	+deleteProduct(...)
-	+adjustStock(...)
-}
-
-class OrderManager {
-	+createOrder(customer, items)
-	+addItem(orderId, productId, qty)
-	+finalizeOrder(orderId)
-	+generateBill(orderId)
-}
-
-class DatabaseConnection {
-	+getConnection(): Connection
-}
-
-class Order {
-	-id
-	-customerId
-	-total
-}
-
-class OrderItem {
-	-orderId
-	-productId
-	-quantity
-	-price
-}
-
-App --> CustomerManager
-App --> ProductManager
-App --> OrderManager
-CustomerManager --> DatabaseConnection
-ProductManager --> DatabaseConnection
-OrderManager --> DatabaseConnection
-OrderManager --> Order
-Order --> OrderItem
-@enduml
-```
-Purpose: Minimal CLI architecture—App drives managers; managers validate and call JDBC via DatabaseConnection; Order and OrderItem model multi-line orders; no extra layers or frameworks.
 
 Sequence Diagram (Place Order, PlantUML):
 ```
