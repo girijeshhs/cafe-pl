@@ -313,15 +313,27 @@ Operational tasks are kept to a minimum: start the database, run the application
 
 ### 6.1 Strategy
 
-Testing covered the basics: CRUD paths for customers, products, and orders; validation for prices and phone numbers; and transaction safety during order creation. Data resets between runs kept tests repeatable. Edge cases included zero-quantity lines, duplicate products in the same order, and invalid phone formats.
+The testing approach was scoped to what a single-location CLI system must reliably support. Core CRUD paths for customers, products, and orders were exercised to confirm that every menu action performs the intended database operation without leaving partial data. Particular emphasis was placed on order creation because it involves multiple inserts; the strategy required that either all line items and the header commit together or none do, preserving invoice correctness.
+
+Validation scenarios were treated as first-class test cases. Inputs with negative prices, implausible phone lengths, or zero-quantity line items were supplied to ensure the application rejected them before hitting the database. Duplicate customer creation using the same phone number was attempted to verify that the system prevents redundant records and keeps the customer list clean. These checks align with the design decision to enforce simple business rules at the CLI layer.
+
+Repeatability was maintained by resetting data between runs. A small, known seed dataset enabled comparisons of expected versus actual outcomes, and cleanup scripts restored the database to a baseline state to avoid cross-test contamination. This discipline ensured that observed behaviours stemmed from the code under test rather than leftover data from prior executions.
 
 ### 6.2 Coverage and Tools
 
-JUnit handled unit checks, and manual runs verified end-to-end menu flows on macOS and Windows with the same Java/MySQL setup. Prepared statements were probed with bad inputs to confirm rejection. Basic timing checks ensured order creation stayed responsive on sample datasets (hundreds of products, dozens of orders).
+JUnit provided unit-level assurance for helper methods and validation routines, while manual end-to-end passes confirmed that the CLI menus, managers, and DAOs worked together on both macOS and Windows using the same Java/MySQL versions. This dual-platform check was important because the deployment environment may vary across café laptops or lab machines.
+
+Prepared statements were intentionally stressed with malformed inputs to confirm that parameter binding rejects unsafe data and that meaningful errors surface without exposing SQL details to the user. Basic timing spot-checks on sample datasets—hundreds of products and dozens of orders—ensured that order creation and lookups stayed responsive within a console context, even without performance tuning.
+
+Coverage focused on functional correctness and safety rather than load or concurrency, reflecting the assumption of a modest user base and single-site deployment. No GUI or web tooling was involved, consistent with the project constraints; all observations came from the CLI output and log files generated during test runs.
 
 ### 6.3 Outcomes
 
-Core flows worked as expected after fixing input validation edge cases and a transaction rollback bug. A few manual usability notes were logged (clearer menu labels, confirmation prompts before deletes) and folded into the CLI text. Future work should add scripted regression suites, seed data factories, and simple load checks once a GUI or API is added.
+Results showed that the intended flows operated correctly once two early issues were resolved: an input validation edge case on phone numbers and a rollback path that initially failed to undo partial order inserts. After addressing these, CRUD operations and transaction boundaries behaved as designed, leaving the database in a consistent state after each scenario.
+
+Manual sessions highlighted minor usability refinements, such as clearer wording on menu labels and confirmation prompts before deletions, which were incorporated into the CLI text. Logs captured stack traces and SQL errors as planned, aiding quick diagnosis without confusing operators with technical output.
+
+Future improvements to testing are documented for later iterations: scripted regression suites to avoid reliance on manual runs, seed data factories to accelerate setup, and light load checks to observe behaviour with larger product lists. These steps remain aligned with the current constraints—no GUI, no web tier, no external services—while raising confidence as the codebase evolves.
 
 ---
 
